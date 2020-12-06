@@ -7,6 +7,8 @@ public class LoginException extends RuntimeException {
 
     public String message;
     public int statusCode;
-
+ public LoginException(String message,int statusCode){
+	
+}
 
 }

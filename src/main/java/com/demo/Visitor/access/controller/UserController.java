@@ -2,12 +2,18 @@ package com.demo.Visitor.access.controller;
 
 import com.demo.Visitor.access.dto.RegisterUserDto;
 import com.demo.Visitor.access.dto.ResponseDto;
+import com.demo.Visitor.access.exception.BusinessException;
 import com.demo.Visitor.access.exception.LoginException;
+import com.demo.Visitor.access.model.UserInfo;
 import com.demo.Visitor.access.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -27,4 +33,16 @@ public class UserController {
         throw new LoginException("Employee Id Exist", 400);
     }
 
+    @PostMapping(value = "/login/{empId}/{password}", produces = MediaType.APPLICATION_JSON_VALUE)
+	private ResponseEntity<?> userLogin(@PathVariable int empId, @PathVariable String password) {
+    	UserInfo users;
+		try {
+			users = userService.findByUsernameAndPassword(empId, password);
+			return new ResponseEntity<>(users, HttpStatus.CREATED);
+		} catch (BusinessException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+		}
+
+	}
+    
 }

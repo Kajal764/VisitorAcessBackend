@@ -11,5 +11,9 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends MongoRepository<UserInfo, Integer> {
 
-    Optional<UserInfo> findByEmpId(@Pattern(regexp = "^[0-9]\\d{6}$", message = "Employee Id should be 7 digit") int email);
+    Optional<UserInfo> findByEmpId( int empId);
+     
+    public UserInfo findByEmpIdAndPassword(int empId, String password);
+
+
 }

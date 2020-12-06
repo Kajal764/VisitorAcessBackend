@@ -34,7 +34,37 @@ public class UserInfo {
 
     private boolean accountActive;
 
-    public UserInfo(RegisterUserDto registerUserDto) {
+    public boolean getAccountActive() {
+		return accountActive;
+	}
+
+	
+	
+
+	public void setAccountActive(boolean accountActive) {
+		this.accountActive = accountActive;
+	}
+
+
+
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public int getEmpId() {
+		return empId;
+	}
+
+	public void setEmpId(int empId) {
+		this.empId = empId;
+	}
+
+	public UserInfo(RegisterUserDto registerUserDto) {
         this.firstName = registerUserDto.firstName;
         this.lastName = registerUserDto.lastName;
         this.email = registerUserDto.email;
