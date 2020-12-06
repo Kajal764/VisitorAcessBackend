@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -34,15 +35,23 @@ public class UserController {
     }
 
     @PostMapping(value = "/login/{empId}/{password}", produces = MediaType.APPLICATION_JSON_VALUE)
-	private ResponseEntity<?> userLogin(@PathVariable int empId, @PathVariable String password) {
-    	UserInfo users;
-		try {
-			users = userService.findByUsernameAndPassword(empId, password);
-			return new ResponseEntity<>(users, HttpStatus.CREATED);
-		} catch (BusinessException e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
-		}
+    private ResponseEntity<?> userLogin(@PathVariable int empId, @PathVariable String password) {
+        UserInfo users;
+        try {
+            users = userService.findByUsernameAndPassword(empId, password);
+            return new ResponseEntity<>(users, HttpStatus.CREATED);
+        } catch (BusinessException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
+    }
 
-	}
-    
+    @GetMapping(value = "/list")
+    private List<UserInfo> getUserList() {
+        List<UserInfo> allUserData = userService.getAllUserData();
+        if (allUserData.size() == 0) {
+            throw new LoginException("User Not Present", 400);
+        }
+        return allUserData;
+    }
+
 }

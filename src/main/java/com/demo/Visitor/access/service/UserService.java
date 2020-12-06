@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,15 +30,21 @@ public class UserService {
         userRepository.save(userInfo);
         return true;
     }
-    
 
-	public UserInfo findByUsernameAndPassword(int empId,String password) throws BusinessException{
-		UserInfo usr = userRepository.findByEmpIdAndPassword(empId, password);
-		if (usr == null)
-			throw new BusinessException("Invalid credentials..");
-		 return usr;
-		//if (usr.get().getEmpId()==(empId)) 
-           // if (bcryptPasswordEncoder.matches(password, usr.get().getPassword())) 
-            // if(usr.get().getAccountActive()==true) 
-          }
+
+    public UserInfo findByUsernameAndPassword(int empId, String password) throws BusinessException {
+        UserInfo usr = userRepository.findByEmpIdAndPassword(empId, password);
+        if (usr == null)
+            throw new BusinessException("Invalid credentials..");
+        return usr;
+        //if (usr.get().getEmpId()==(empId))
+        // if (bcryptPasswordEncoder.matches(password, usr.get().getPassword()))
+        // if(usr.get().getAccountActive()==true)
+    }
+
+    public List<UserInfo> getAllUserData() {
+        List<UserInfo> userList = userRepository.findAll();
+        userList.removeIf(value -> value.getRole().equals("Admin"));
+        return userList;
+    }
 }
