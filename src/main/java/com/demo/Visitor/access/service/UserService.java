@@ -47,4 +47,8 @@ public class UserService {
         userList.removeIf(value -> value.getRole().equals("Admin"));
         return userList;
     }
+
+    public void deleteUser(int empId) {
+        userRepository.deleteByEmpId(empId);
+    }
 }

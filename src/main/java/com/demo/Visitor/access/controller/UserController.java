@@ -6,17 +6,14 @@ import com.demo.Visitor.access.exception.BusinessException;
 import com.demo.Visitor.access.exception.LoginException;
 import com.demo.Visitor.access.model.UserInfo;
 import com.demo.Visitor.access.service.UserService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
-
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("user")
@@ -52,6 +49,12 @@ public class UserController {
             throw new LoginException("User Not Present", 400);
         }
         return allUserData;
+    }
+
+    @DeleteMapping(value = "/{empId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    private ResponseDto deleteUser(@PathVariable int empId){
+        userService.deleteUser(empId);
+        return new ResponseDto("Employee data deleted", 200);
     }
 
 }
