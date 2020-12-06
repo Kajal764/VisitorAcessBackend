@@ -35,7 +35,7 @@ public class UserController {
     private ResponseEntity<?> userLogin(@PathVariable int empId, @PathVariable String password) {
         UserInfo users;
         try {
-            users = userService.findByUsernameAndPassword(empId, password);
+            users = userService.login(empId, password);
             return new ResponseEntity<>(users, HttpStatus.CREATED);
         } catch (BusinessException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);

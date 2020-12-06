@@ -32,14 +32,20 @@ public class UserService {
     }
 
 
-    public UserInfo findByUsernameAndPassword(int empId, String password) throws BusinessException {
-        UserInfo usr = userRepository.findByEmpIdAndPassword(empId, password);
-        if (usr == null)
-            throw new BusinessException("Invalid credentials..");
-        return usr;
-        //if (usr.get().getEmpId()==(empId))
-        // if (bcryptPasswordEncoder.matches(password, usr.get().getPassword()))
-        // if(usr.get().getAccountActive()==true)
+    public UserInfo login(int empId, String password) throws BusinessException {
+        Optional<UserInfo> user = userRepository.findByEmpId(empId);
+        if (user.isPresent()) {
+            if (user.get().getEmpId() == empId) {
+                if (bcryptPasswordEncoder.matches(password, user.get().getPassword())) {
+                    if (user.get().getAccountActive()) {
+                        return user.get();
+                    }
+                    throw new BusinessException("Registration request not approved");
+                }
+                throw new BusinessException("Invalid credentials..");
+            }
+        }
+        throw new BusinessException("Account not exist");
     }
 
     public List<UserInfo> getAllUserData() {
