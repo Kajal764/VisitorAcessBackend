@@ -1,11 +1,10 @@
 package com.demo.Visitor.access.service;
 
-import com.demo.Visitor.access.dto.RegisterOdcDto;
 import com.demo.Visitor.access.dto.RegisterUserDto;
+import com.demo.Visitor.access.dto.RegistrationRequest;
+import com.demo.Visitor.access.dto.ResponseDto;
 import com.demo.Visitor.access.exception.BusinessException;
-import com.demo.Visitor.access.model.ODCList;
 import com.demo.Visitor.access.model.UserInfo;
-import com.demo.Visitor.access.repository.OdcRepository;
 import com.demo.Visitor.access.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,9 +18,6 @@ public class UserService {
 
     @Autowired
     UserRepository userRepository;
-    
-    @Autowired
-    OdcRepository odcRepository;
 
     @Autowired
     BCryptPasswordEncoder bcryptPasswordEncoder;
@@ -36,7 +32,6 @@ public class UserService {
         userRepository.save(userInfo);
         return true;
     }
-
 
     public UserInfo login(int empId, String password) throws BusinessException {
         Optional<UserInfo> user = userRepository.findByEmpId(empId);
@@ -63,32 +58,32 @@ public class UserService {
     public void deleteUser(int empId) {
         userRepository.deleteByEmpId(empId);
     }
-    
-    public List<ODCList> odclist(){
-    	List<ODCList> odclist= odcRepository.findAll();
-    	System.out.println(odclist);
-		return odclist;
+
+    public List<UserInfo> getManagerList() {
+        List<UserInfo> userInfoList = userRepository.findAll();
+        userInfoList.removeIf(user -> user.getRole().equals("Employee"));
+        userInfoList.removeIf(user -> user.getAccountActive() == true);
+        return userInfoList;
     }
 
 
-	public boolean addodc(RegisterOdcDto registerodcdto) {
-		ODCList odclist = new ODCList(registerodcdto);
-        odcRepository.save(odclist);
-        return true;
-	}
-	
-	public void deleteodc(int odcid)
-	{
-		odcRepository.deleteById(odcid);
-	}
-	
-	public List<UserInfo> managerlist(){
-		List<UserInfo> userList = userRepository.findAll();
-        userList.removeIf((value -> ( value.getRole().equals("Employee") | value.getRole().equals("Admin"))));
-        return userList;
-	}
-	
-    
+    public ResponseDto registrationRequest(RegistrationRequest registrationRequest) {
+        Optional<UserInfo> userInfo = userRepository.findByEmpId(registrationRequest.empId);
+        if (registrationRequest.status == true) {
+            userInfo.get().setAccountActive(true);
+            userRepository.deleteByEmpId(userInfo.get().getEmpId());
+            userRepository.save(userInfo.get());
+            return new ResponseDto("Request accept", 200);
+        }
+        userRepository.deleteByEmpId(registrationRequest.empId);
+        return new ResponseDto("Request reject", 200);
+    }
+
+    public List<UserInfo> getRegistrationRequestOfEmployee(int empId) {
+        Optional<UserInfo> manager = userRepository.findByEmpId(empId);
+        List<UserInfo> userInfoList = userRepository.findAllByManagerName(manager.get().getFirstName());
+        return userInfoList;
+    }
 }
     
 
