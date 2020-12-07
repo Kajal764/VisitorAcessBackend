@@ -38,15 +38,17 @@ public class UserInfo {
 		return accountActive;
 	}
 
-	
-	
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
 
 	public void setAccountActive(boolean accountActive) {
 		this.accountActive = accountActive;
 	}
-
-
-
 
 	public String getPassword() {
 		return password;
