@@ -15,7 +15,11 @@ public interface UserRepository extends MongoRepository<UserInfo, Integer> {
 
     @DeleteQuery
     void deleteByEmpId(int empId);
+<<<<<<< HEAD
 
     List<UserInfo> findAllByManagerName(String firstName);
 
+=======
+	
+>>>>>>> bb48a09a796ac5a22989f0c37e56d6e19c4160fd
 }

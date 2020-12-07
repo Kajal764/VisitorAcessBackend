@@ -66,7 +66,6 @@ public class UserService {
         return userInfoList;
     }
 
-
     public ResponseDto registrationRequest(RegistrationRequest registrationRequest) {
         Optional<UserInfo> userInfo = userRepository.findByEmpId(registrationRequest.empId);
         if (registrationRequest.status == true) {
@@ -84,6 +83,6 @@ public class UserService {
         List<UserInfo> userInfoList = userRepository.findAllByManagerName(manager.get().getFirstName());
         return userInfoList;
     }
-}
-    
 
+
+}
