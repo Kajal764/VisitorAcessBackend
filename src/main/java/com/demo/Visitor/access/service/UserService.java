@@ -1,8 +1,6 @@
 package com.demo.Visitor.access.service;
 
 import com.demo.Visitor.access.dto.RegisterUserDto;
-import com.demo.Visitor.access.dto.RegistrationRequest;
-import com.demo.Visitor.access.dto.ResponseDto;
 import com.demo.Visitor.access.exception.BusinessException;
 import com.demo.Visitor.access.model.ODCList;
 import com.demo.Visitor.access.model.UserInfo;
@@ -10,7 +8,6 @@ import com.demo.Visitor.access.model.VisitorRequest;
 import com.demo.Visitor.access.repository.ODCRepository;
 import com.demo.Visitor.access.repository.UserRepository;
 import com.demo.Visitor.access.repository.VisitorRequestRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -129,6 +126,5 @@ public class UserService {
 		else
 			return true;
 	}
-
 
 }
