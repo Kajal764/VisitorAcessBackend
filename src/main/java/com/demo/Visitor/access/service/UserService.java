@@ -7,6 +7,7 @@ import com.demo.Visitor.access.model.UserInfo;
 import com.demo.Visitor.access.model.VisitorRequest;
 import com.demo.Visitor.access.repository.ODCRepository;
 import com.demo.Visitor.access.repository.UserRepository;
+import com.demo.Visitor.access.repository.VisitorRequestRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,6 +24,9 @@ public class UserService {
 
 	@Autowired
 	ODCRepository odcRepository;
+
+	@Autowired
+	VisitorRequestRepository visitorRequestRepository;
 
 	@Autowired
 	BCryptPasswordEncoder bcryptPasswordEncoder;
@@ -65,7 +69,7 @@ public class UserService {
 	}
 
 	public boolean insertIntoVisitorRequest(VisitorRequest visitorRequest) throws BusinessException {
-		VisitorRequest visitorRequestAdded = userRepository.insert(visitorRequest);
+		VisitorRequest visitorRequestAdded = visitorRequestRepository.insert(visitorRequest);
 		if (visitorRequestAdded == null)
 			throw new BusinessException("Something went wrong!!!Please try again");
 		else
@@ -73,7 +77,7 @@ public class UserService {
 	}
 
 	public List<VisitorRequest> findAllByEmpId(int empId) throws BusinessException {
-		List<VisitorRequest> visitorRequests = userRepository.findAllByEmpId(empId);
+		List<VisitorRequest> visitorRequests = visitorRequestRepository.findAllByEmpId(empId);
 		if (visitorRequests == null)
 			throw new BusinessException("No requests has been raised for this employee Id");
 		else
@@ -87,4 +91,41 @@ public class UserService {
 		else
 			return odcLists;
 	}
+
+	public boolean addOdc(ODCList odc) throws BusinessException {
+		ODCList odcAdded = odcRepository.insert(odc);
+		if (odcAdded == null)
+			throw new BusinessException("Something went wrong!!!Please try again");
+		else
+			return true;
+	}
+
+	public List<VisitorRequest> getAllByStatus(String status) throws BusinessException {
+		List<VisitorRequest> visitorRequestList = visitorRequestRepository.findAllByStatus(status);
+		if (visitorRequestList == null)
+			throw new BusinessException("No Requests Raised!!");
+		else
+			return visitorRequestList;
+	}
+
+	public boolean approveOdcRequest(VisitorRequest visitorRequest) throws BusinessException {
+		visitorRequestRepository.deleteByEmpIdAndStatus(visitorRequest.getEmpId(), visitorRequest.getStatus());
+		visitorRequest.setStatus("Approved");
+		VisitorRequest success = visitorRequestRepository.save(visitorRequest);
+		if (success == null)
+			throw new BusinessException("Request Cannot be Approved");
+		else
+			return true;
+	}
+
+	public boolean rejectOdcRequest(VisitorRequest visitorRequest) throws BusinessException {
+		visitorRequestRepository.deleteByEmpIdAndStatus(visitorRequest.getEmpId(), visitorRequest.getStatus());
+		visitorRequest.setStatus("Rejected");
+		VisitorRequest success = visitorRequestRepository.save(visitorRequest);
+		if (success == null)
+			throw new BusinessException("Request Cannot be Rejected");
+		else
+			return true;
+	}
+
 }

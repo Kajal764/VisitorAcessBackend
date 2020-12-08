@@ -1,6 +1,5 @@
 package com.demo.Visitor.access.repository;
 
-
 import com.demo.Visitor.access.model.UserInfo;
 import com.demo.Visitor.access.model.VisitorRequest;
 
@@ -14,14 +13,12 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends MongoRepository<UserInfo, Integer> {
 
-    Optional<UserInfo> findByEmpId(int empId);
+	Optional<UserInfo> findByEmpId(int empId);
 
-    UserInfo findByEmpIdAndPassword(int empId, String password);
+	UserInfo findByEmpIdAndPassword(int empId, String password);
 
-    @DeleteQuery
-    void deleteByEmpId(int empId);
-    
-    public List<VisitorRequest> findAllByEmpId(int empId);
+	@DeleteQuery
+	void deleteByEmpId(int empId);
 
-	public VisitorRequest insert(VisitorRequest visitorRequest);
+	public List<UserInfo> findByRole(String role);
 }
