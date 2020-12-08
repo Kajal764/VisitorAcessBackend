@@ -1,9 +1,11 @@
 package com.demo.Visitor.access.controller;
 
+import com.demo.Visitor.access.dto.RegisterOdcDto;
 import com.demo.Visitor.access.dto.RegisterUserDto;
 import com.demo.Visitor.access.dto.ResponseDto;
 import com.demo.Visitor.access.exception.BusinessException;
 import com.demo.Visitor.access.exception.LoginException;
+import com.demo.Visitor.access.model.ODCList;
 import com.demo.Visitor.access.model.UserInfo;
 import com.demo.Visitor.access.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,5 +58,28 @@ public class UserController {
         userService.deleteUser(empId);
         return new ResponseDto("Employee data deleted", 200);
     }
+    
+    @GetMapping(value="/managerlist")
+    private List<UserInfo> getmanagers(){
+    	return userService.managerlist();
+    }
+    
+    @GetMapping(value="/odclist")
+    private List<ODCList> getodclist(){
+    	System.out.println("entered");
+    	return userService.odclist();
+    }
+    
+    @PostMapping(value="/addodc")
+    private ResponseDto addnewodc(@RequestBody RegisterOdcDto registerodcdto) {
+    	userService.addodc(registerodcdto);
+    	return new ResponseDto("Odc added successfully", 200) ;
+    }
 
+    @DeleteMapping(value="/deleteodc/{odcid}")
+    private ResponseDto deleteodcbyid(@PathVariable int odcid) {
+    	userService.deleteodc(odcid);
+    	return new ResponseDto("ODC deleted from the list", 200);
+    }
+    
 }

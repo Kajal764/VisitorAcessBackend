@@ -1,8 +1,11 @@
 package com.demo.Visitor.access.service;
 
+import com.demo.Visitor.access.dto.RegisterOdcDto;
 import com.demo.Visitor.access.dto.RegisterUserDto;
 import com.demo.Visitor.access.exception.BusinessException;
+import com.demo.Visitor.access.model.ODCList;
 import com.demo.Visitor.access.model.UserInfo;
+import com.demo.Visitor.access.repository.OdcRepository;
 import com.demo.Visitor.access.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,6 +19,9 @@ public class UserService {
 
     @Autowired
     UserRepository userRepository;
+    
+    @Autowired
+    OdcRepository odcRepository;
 
     @Autowired
     BCryptPasswordEncoder bcryptPasswordEncoder;
@@ -57,4 +63,32 @@ public class UserService {
     public void deleteUser(int empId) {
         userRepository.deleteByEmpId(empId);
     }
+    
+    public List<ODCList> odclist(){
+    	List<ODCList> odclist= odcRepository.findAll();
+    	System.out.println(odclist);
+		return odclist;
+    }
+
+
+	public boolean addodc(RegisterOdcDto registerodcdto) {
+		ODCList odclist = new ODCList(registerodcdto);
+        odcRepository.save(odclist);
+        return true;
+	}
+	
+	public void deleteodc(int odcid)
+	{
+		odcRepository.deleteById(odcid);
+	}
+	
+	public List<UserInfo> managerlist(){
+		List<UserInfo> userList = userRepository.findAll();
+        userList.removeIf((value -> ( value.getRole().equals("Employee") | value.getRole().equals("Admin"))));
+        return userList;
+	}
+	
+    
 }
+    
+
