@@ -15,14 +15,10 @@ public interface UserRepository extends MongoRepository<UserInfo, Integer> {
 
 	Optional<UserInfo> findByEmpId(int empId);
 
-
-	UserInfo findByEmpIdAndPassword(int empId, String password);
-
 	@DeleteQuery
 	void deleteByEmpId(int empId);
 
 	public List<UserInfo> findByRole(String role);
-
 
     List<UserInfo> findAllByManagerName(String firstName);
 
