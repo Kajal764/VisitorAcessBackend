@@ -22,4 +22,8 @@ public interface UserRepository extends MongoRepository<UserInfo, Integer> {
 
     List<UserInfo> findAllByManagerName(String firstName);
 
+	Optional<UserInfo> findByFirstName(String name);
+
+
+
 }

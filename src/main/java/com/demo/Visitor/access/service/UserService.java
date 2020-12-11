@@ -71,6 +71,14 @@ public class UserService {
     }
 
     public boolean insertIntoVisitorRequest(VisitorRequest visitorRequest) throws BusinessException {
+        Optional<UserInfo> user = userRepository.findByEmpId(visitorRequest.getEmpId());
+        if (visitorRequest.getEmployee() == 0) {
+            visitorRequest.setManagerEmpID(6666666);
+        } else {
+            String[] name = user.get().getManagerName().split(" ");
+            Optional<UserInfo> manager = userRepository.findByFirstName(name[0]);
+            visitorRequest.setManagerEmpID(manager.get().getEmpId());
+        }
         VisitorRequest visitorRequestAdded = visitorRequestRepository.insert(visitorRequest);
         if (visitorRequestAdded == null)
             throw new BusinessException("Something went wrong!!!Please try again");
@@ -78,7 +86,7 @@ public class UserService {
             return true;
     }
 
-    public List<VisitorRequest> findAllByEmpId(int empId) throws BusinessException {
+    public List<VisitorRequest> viewOdcRequest(int empId) throws BusinessException {
         List<VisitorRequest> visitorRequests = visitorRequestRepository.findAllByEmpId(empId);
         if (visitorRequests == null)
             throw new BusinessException("No requests has been raised for this employee Id");
@@ -96,8 +104,8 @@ public class UserService {
 
     public boolean addOdc(ODCList odc) throws BusinessException {
         Optional<ODCList> odcName = odcRepository.findByOdcName(odc.getOdcName());
-        if(odcName.isPresent())
-            throw new LoginException("Odc Already Exist",400);
+        if (odcName.isPresent())
+            throw new LoginException("Odc Already Exist", 400);
         ODCList odcAdded = odcRepository.insert(odc);
         if (odcAdded == null)
             throw new BusinessException("Something went wrong!!!Please try again");
@@ -105,13 +113,6 @@ public class UserService {
             return true;
     }
 
-    public List<VisitorRequest> getAllByStatus(String status) throws BusinessException {
-        List<VisitorRequest> visitorRequestList = visitorRequestRepository.findAllByStatus(status);
-        if (visitorRequestList == null)
-            throw new BusinessException("No Requests Raised!!");
-        else
-            return visitorRequestList;
-    }
 
     public boolean approveOdcRequest(VisitorRequest visitorRequest) throws BusinessException {
         visitorRequestRepository.deleteByEmpIdAndStatus(visitorRequest.getEmpId(), visitorRequest.getStatus());
@@ -168,6 +169,19 @@ public class UserService {
     public boolean deleteOdc(String odcId) {
         odcRepository.deleteByOdcName(odcId);
         return true;
+    }
+
+    public List<VisitorRequest> getPendingVisitorRequest(int empId) throws BusinessException {
+        Optional<UserInfo> user = userRepository.findByEmpId(empId);
+        List<VisitorRequest> visitorRequestList = visitorRequestRepository.findByManagerEmpID(empId);
+        if (user.get().getRole().equals("Manager")) {
+            visitorRequestList.removeIf(value -> value.getEmployee() == 0);
+        } else {
+            visitorRequestList.removeIf(value -> value.getEmployee() == 1);
+        }
+        if (visitorRequestList == null)
+            throw new BusinessException("No Requests Raised!!");
+        return visitorRequestList;
     }
 
 }

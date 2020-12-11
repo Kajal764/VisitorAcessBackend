@@ -1,11 +1,10 @@
 package com.demo.Visitor.access.repository;
 
-import java.util.List;
-
+import com.demo.Visitor.access.model.VisitorRequest;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-import com.demo.Visitor.access.model.VisitorRequest;
+import java.util.List;
 
 @Repository
 public interface VisitorRequestRepository extends MongoRepository<VisitorRequest, String> {
@@ -14,12 +13,10 @@ public interface VisitorRequestRepository extends MongoRepository<VisitorRequest
 
 	public VisitorRequest insert(VisitorRequest visitorRequest);
 
-	public List<VisitorRequest> findAllByStatus(String status);
-
-	public VisitorRequest findOneByEmpIdAndStatus(int empId, String status);
-
 	public VisitorRequest save(VisitorRequest visitorRequest);
 
 	public void deleteByEmpIdAndStatus(int empId, String status);
+
+	public List<VisitorRequest> findByManagerEmpID(int empId);
 
 }

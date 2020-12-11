@@ -60,8 +60,9 @@ public class UserController {
         return new ResponseDto("Employee data deleted", 200);
     }
 
-    @RequestMapping(value = "/raiseOdcRequest", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> raiseOdcRequest(@RequestBody VisitorRequest visitorRequest) throws BusinessException {
+    @RequestMapping(value = "/raiseOdcRequest", method = RequestMethod.POST)
+    public ResponseEntity<?> raiseOdcRequest(@RequestBody VisitorRequest visitorRequest) {
+        System.out.println("inside raise odc " + visitorRequest);
         ResponseEntity<?> responseEntity = null;
         try {
             boolean success = userService.insertIntoVisitorRequest(visitorRequest);
@@ -73,10 +74,10 @@ public class UserController {
     }
 
     @RequestMapping(value = "/viewUserRequests/{empId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> viewUserRequest(@PathVariable int empId) throws BusinessException {
+    public ResponseEntity<?> viewUserRequest(@PathVariable int empId) {
         ResponseEntity<?> responseEntity = null;
         try {
-            List<VisitorRequest> visitorRequests = userService.findAllByEmpId(empId);
+            List<VisitorRequest> visitorRequests = userService.viewOdcRequest(empId);
             responseEntity = new ResponseEntity<>(visitorRequests, HttpStatus.ACCEPTED);
         } catch (BusinessException e) {
             responseEntity = new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
@@ -85,7 +86,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/odcList", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> odcLists() throws BusinessException {
+    public ResponseEntity<?> odcLists() {
         ResponseEntity<?> responseEntity = null;
         try {
             List<ODCList> odcLists = userService.findAllODC();
@@ -97,17 +98,12 @@ public class UserController {
         return responseEntity;
     }
 
-
-    @RequestMapping(value = "/visitorRequestByStatus/{status}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> visitorRequestByStatus(@PathVariable String status) throws BusinessException {
+    @GetMapping(value = "/pendingVisitorRequest/{empId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> visitorRequestByStatus(@PathVariable int empId) throws BusinessException {
         ResponseEntity<?> responseEntity = null;
-        try {
-            List<VisitorRequest> visitorRequests = userService.getAllByStatus(status);
-            if (visitorRequests != null)
-                responseEntity = new ResponseEntity<>(visitorRequests, HttpStatus.ACCEPTED);
-        } catch (BusinessException e) {
-            responseEntity = new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
-        }
+        List<VisitorRequest> visitorRequests = userService.getPendingVisitorRequest(empId);
+        if (visitorRequests != null)
+            responseEntity = new ResponseEntity<>(visitorRequests, HttpStatus.ACCEPTED);
         return responseEntity;
     }
 
