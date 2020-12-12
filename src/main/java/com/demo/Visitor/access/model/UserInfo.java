@@ -65,6 +65,47 @@ public class UserInfo {
 	public void setEmpId(int empId) {
 		this.empId = empId;
 	}
+	
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public long getMobileNo() {
+		return mobileNo;
+	}
+
+	public void setMobileNo(long mobileNo) {
+		this.mobileNo = mobileNo;
+	}
+
+	public String getManagerName() {
+		return managerName;
+	}
+
+	public void setManagerName(String managerName) {
+		this.managerName = managerName;
+	}
 
 	public UserInfo(RegisterUserDto registerUserDto) {
         this.firstName = registerUserDto.firstName;

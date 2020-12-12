@@ -16,6 +16,8 @@ public interface VisitorRequestRepository extends MongoRepository<VisitorRequest
 	public VisitorRequest save(VisitorRequest visitorRequest);
 
 	public void deleteByEmpIdAndStatus(int empId, String status);
+	
+	public void deleteByVisitorRequestId(int visitorRequest);
 
 	public List<VisitorRequest> findByManagerEmpID(int empId);
 

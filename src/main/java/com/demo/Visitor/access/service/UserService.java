@@ -115,23 +115,38 @@ public class UserService {
 
 
     public boolean approveOdcRequest(VisitorRequest visitorRequest) throws BusinessException {
-        visitorRequestRepository.deleteByEmpIdAndStatus(visitorRequest.getEmpId(), visitorRequest.getStatus());
-        visitorRequest.setStatus("Approved");
-        VisitorRequest success = visitorRequestRepository.save(visitorRequest);
-        if (success == null)
-            throw new BusinessException("Request Cannot be Approved");
-        else
-            return true;
+//        visitorRequestRepository.deleteByEmpIdAndStatus(visitorRequest.getEmpId(), visitorRequest.getStatus());
+//        visitorRequest.setStatus("Approved");
+//        VisitorRequest success = visitorRequestRepository.save(visitorRequest);
+//        if (success == null)
+//            throw new BusinessException("Request Cannot be Approved");
+//        else
+//            return true;
+    	visitorRequestRepository.deleteByVisitorRequestId(visitorRequest.getVisitorRequestId());
+    	visitorRequest.setStatus("Approved");
+    	VisitorRequest success = visitorRequestRepository.save(visitorRequest);
+    	if(success == null)
+    		throw new BusinessException("Request Cannot be Approved");
+    	else
+    		return true;
     }
 
     public boolean rejectOdcRequest(VisitorRequest visitorRequest) throws BusinessException {
-        visitorRequestRepository.deleteByEmpIdAndStatus(visitorRequest.getEmpId(), visitorRequest.getStatus());
-        visitorRequest.setStatus("Rejected");
-        VisitorRequest success = visitorRequestRepository.save(visitorRequest);
-        if (success == null)
-            throw new BusinessException("Request Cannot be Rejected");
-        else
-            return true;
+//        visitorRequestRepository.deleteByEmpIdAndStatus(visitorRequest.getEmpId(), visitorRequest.getStatus());
+//        visitorRequest.setStatus("Rejected");
+//        VisitorRequest success = visitorRequestRepository.save(visitorRequest);
+//        if (success == null)
+//            throw new BusinessException("Request Cannot be Rejected");
+//        else
+//            return true;
+    	
+    	visitorRequestRepository.deleteByVisitorRequestId(visitorRequest.getVisitorRequestId());
+    	visitorRequest.setStatus("Rejected");
+    	VisitorRequest success = visitorRequestRepository.save(visitorRequest);
+    	if(success == null)
+    		throw new BusinessException("Request Cannot be Rejected");
+    	else
+    		return true;
     }
 
     public List<UserInfo> getManagerList() {
