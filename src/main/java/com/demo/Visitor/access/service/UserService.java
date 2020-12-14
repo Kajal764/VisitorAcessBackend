@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class UserService {
@@ -72,6 +73,7 @@ public class UserService {
 
     public boolean insertIntoVisitorRequest(VisitorRequest visitorRequest) throws BusinessException {
         Optional<UserInfo> user = userRepository.findByEmpId(visitorRequest.getEmpId());
+        int random_id;
         if (visitorRequest.getEmployee() == 0) {
             visitorRequest.setManagerEmpID(6666666);
         } else {
@@ -79,6 +81,13 @@ public class UserService {
             Optional<UserInfo> manager = userRepository.findByFirstName(name[0]);
             visitorRequest.setManagerEmpID(manager.get().getEmpId());
         }
+        Random random = new Random();
+        random_id = random.nextInt();
+        Optional<VisitorRequest> byVisitorRequestId = visitorRequestRepository.findByVisitorRequestId(random_id);
+        if (byVisitorRequestId.isPresent()) {
+            random_id = random.nextInt();
+        }
+        visitorRequest.setVisitorRequestId(random_id);
         VisitorRequest visitorRequestAdded = visitorRequestRepository.insert(visitorRequest);
         if (visitorRequestAdded == null)
             throw new BusinessException("Something went wrong!!!Please try again");
@@ -115,38 +124,23 @@ public class UserService {
 
 
     public boolean approveOdcRequest(VisitorRequest visitorRequest) throws BusinessException {
-//        visitorRequestRepository.deleteByEmpIdAndStatus(visitorRequest.getEmpId(), visitorRequest.getStatus());
-//        visitorRequest.setStatus("Approved");
-//        VisitorRequest success = visitorRequestRepository.save(visitorRequest);
-//        if (success == null)
-//            throw new BusinessException("Request Cannot be Approved");
-//        else
-//            return true;
-    	visitorRequestRepository.deleteByVisitorRequestId(visitorRequest.getVisitorRequestId());
-    	visitorRequest.setStatus("Approved");
-    	VisitorRequest success = visitorRequestRepository.save(visitorRequest);
-    	if(success == null)
-    		throw new BusinessException("Request Cannot be Approved");
-    	else
-    		return true;
+        visitorRequestRepository.deleteByVisitorRequestId(visitorRequest.getVisitorRequestId());
+        visitorRequest.setStatus("Approved");
+        VisitorRequest success = visitorRequestRepository.save(visitorRequest);
+        if (success == null)
+            throw new BusinessException("Request Cannot be Approved");
+        else
+            return true;
     }
 
     public boolean rejectOdcRequest(VisitorRequest visitorRequest) throws BusinessException {
-//        visitorRequestRepository.deleteByEmpIdAndStatus(visitorRequest.getEmpId(), visitorRequest.getStatus());
-//        visitorRequest.setStatus("Rejected");
-//        VisitorRequest success = visitorRequestRepository.save(visitorRequest);
-//        if (success == null)
-//            throw new BusinessException("Request Cannot be Rejected");
-//        else
-//            return true;
-    	
-    	visitorRequestRepository.deleteByVisitorRequestId(visitorRequest.getVisitorRequestId());
-    	visitorRequest.setStatus("Rejected");
-    	VisitorRequest success = visitorRequestRepository.save(visitorRequest);
-    	if(success == null)
-    		throw new BusinessException("Request Cannot be Rejected");
-    	else
-    		return true;
+        visitorRequestRepository.deleteByVisitorRequestId(visitorRequest.getVisitorRequestId());
+        visitorRequest.setStatus("Rejected");
+        VisitorRequest success = visitorRequestRepository.save(visitorRequest);
+        if (success == null)
+            throw new BusinessException("Request Cannot be Rejected");
+        else
+            return true;
     }
 
     public List<UserInfo> getManagerList() {
@@ -159,9 +153,10 @@ public class UserService {
     public ResponseDto registrationRequest(RegistrationRequest registrationRequest) {
         Optional<UserInfo> userInfo = userRepository.findByEmpId(registrationRequest.empId);
         if (registrationRequest.status == true) {
-            userInfo.get().setAccountActive(true);
             userRepository.deleteByEmpId(userInfo.get().getEmpId());
+            userInfo.get().setAccountActive(true);
             userRepository.save(userInfo.get());
+            System.out.println(userInfo.get());
             return new ResponseDto("Request accept", 200);
         }
         userRepository.deleteByEmpId(registrationRequest.empId);
@@ -172,6 +167,7 @@ public class UserService {
         Optional<UserInfo> manager = userRepository.findByEmpId(empId);
         String name = manager.get().getFirstName() + " " + manager.get().getLastName();
         List<UserInfo> userInfoList = userRepository.findAllByManagerName(name);
+        userInfoList.removeIf(value -> value.getAccountActive()==true);
         return userInfoList;
     }
 

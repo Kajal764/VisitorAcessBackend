@@ -62,7 +62,6 @@ public class UserController {
 
     @RequestMapping(value = "/raiseOdcRequest", method = RequestMethod.POST)
     public ResponseEntity<?> raiseOdcRequest(@RequestBody VisitorRequest visitorRequest) {
-        System.out.println("inside raise odc " + visitorRequest);
         ResponseEntity<?> responseEntity = null;
         try {
             boolean success = userService.insertIntoVisitorRequest(visitorRequest);
@@ -135,6 +134,7 @@ public class UserController {
 
     @GetMapping(value = "manager/registration-request/{empId}")
     private List<UserInfo> getRegistrationRequestOfEmployee(@PathVariable int empId) {
+        System.out.println("inside");
         List<UserInfo> registrationRequestOfEmployee = userService.getRegistrationRequestOfEmployee(empId);
         if (registrationRequestOfEmployee.size() == 0) {
             throw new LoginException("No pending request", 400);
@@ -173,7 +173,6 @@ public class UserController {
         }
         return responseEntity;
     }
-
 
     @DeleteMapping(value = "/deleteOdc/{odcName}", produces = MediaType.APPLICATION_JSON_VALUE)
     private ResponseDto deleteOdcById(@PathVariable String odcName) {

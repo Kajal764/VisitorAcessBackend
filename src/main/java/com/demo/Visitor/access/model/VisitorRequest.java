@@ -1,24 +1,15 @@
 package com.demo.Visitor.access.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
-import java.util.Random;
-
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Random;
+
 @Document
-@AllArgsConstructor
-@Getter
-@Setter
-@ToString
 public class VisitorRequest {
 
-	@Indexed(unique = true)
-	private int visitorRequestId;
+    @Indexed(unique = true)
+    private int visitorRequestId;
     private int empId;
     private String startDate;
     private String endDate;
@@ -32,11 +23,9 @@ public class VisitorRequest {
     public VisitorRequest() {
     }
 
-    public VisitorRequest(int empId, String startDate, String endDate, String startTime, String endTime, String odc, String status, int managerEmpID, int employee) {
-    	Random random = new Random();
-    	int randomWithNextInt = random.nextInt();
-    	this.visitorRequestId = randomWithNextInt;
-    	this.empId = empId;
+    public VisitorRequest(int visitorRequestId, int empId, String startDate, String endDate, String startTime, String endTime, String odc, String status, int managerEmpID, int employee) {
+        this.visitorRequestId = visitorRequestId;
+        this.empId = empId;
         this.startDate = startDate;
         this.endDate = endDate;
         this.startTime = startTime;
@@ -45,6 +34,15 @@ public class VisitorRequest {
         this.status = status;
         this.managerEmpID = managerEmpID;
         this.employee = employee;
+    }
+
+
+    public int getVisitorRequestId() {
+        return visitorRequestId;
+    }
+
+    public void setVisitorRequestId(int visitorRequestId) {
+        this.visitorRequestId = visitorRequestId;
     }
 
     public int getEmpId() {
@@ -111,26 +109,27 @@ public class VisitorRequest {
         this.managerEmpID = managerEmpID;
     }
 
-	public int getVisitorRequestId() {
-		return visitorRequestId;
-	}
+    public int getEmployee() {
+        return employee;
+    }
 
-	public void setVisitorRequestId(int visitorRequestId) {
-		this.visitorRequestId = visitorRequestId;
-	}
+    public void setEmployee(int employee) {
+        this.employee = employee;
+    }
 
-	public int getEmployee() {
-		return employee;
-	}
-
-	public void setEmployee(int employee) {
-		this.employee = employee;
-	}
-
-	@Override
-	public String toString() {
-		return "VisitorRequest [visitorRequestId=" + visitorRequestId + ", empId=" + empId + ", startDate=" + startDate
-				+ ", endDate=" + endDate + ", startTime=" + startTime + ", endTime=" + endTime + ", odc=" + odc
-				+ ", status=" + status + ", managerEmpID=" + managerEmpID + ", employee=" + employee + "]";
-	}
+    @Override
+    public String toString() {
+        return "VisitorRequest{" +
+                "visitorRequestId=" + visitorRequestId +
+                ", empId=" + empId +
+                ", startDate='" + startDate + '\'' +
+                ", endDate='" + endDate + '\'' +
+                ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", odc='" + odc + '\'' +
+                ", status='" + status + '\'' +
+                ", managerEmpID=" + managerEmpID +
+                ", employee=" + employee +
+                '}';
+    }
 }

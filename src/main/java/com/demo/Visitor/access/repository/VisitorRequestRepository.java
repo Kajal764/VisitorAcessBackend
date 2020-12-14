@@ -5,20 +5,21 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface VisitorRequestRepository extends MongoRepository<VisitorRequest, String> {
 
-	public List<VisitorRequest> findAllByEmpId(int empId);
+    public List<VisitorRequest> findAllByEmpId(int empId);
 
-	public VisitorRequest insert(VisitorRequest visitorRequest);
+    public VisitorRequest insert(VisitorRequest visitorRequest);
 
-	public VisitorRequest save(VisitorRequest visitorRequest);
+    public VisitorRequest save(VisitorRequest visitorRequest);
 
-	public void deleteByEmpIdAndStatus(int empId, String status);
-	
-	public void deleteByVisitorRequestId(int visitorRequest);
+    public void deleteByVisitorRequestId(int visitorRequest);
 
-	public List<VisitorRequest> findByManagerEmpID(int empId);
+    public List<VisitorRequest> findByManagerEmpID(int empId);
+
+    Optional<VisitorRequest> findByVisitorRequestId(int id);
 
 }
