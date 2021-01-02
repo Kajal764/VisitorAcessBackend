@@ -134,7 +134,6 @@ public class UserController {
 
     @GetMapping(value = "manager/registration-request/{empId}")
     private List<UserInfo> getRegistrationRequestOfEmployee(@PathVariable int empId) {
-        System.out.println("inside");
         List<UserInfo> registrationRequestOfEmployee = userService.getRegistrationRequestOfEmployee(empId);
         if (registrationRequestOfEmployee.size() == 0) {
             throw new LoginException("No pending request", 400);
