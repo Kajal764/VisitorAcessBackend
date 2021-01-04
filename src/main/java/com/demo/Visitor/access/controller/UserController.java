@@ -119,6 +119,15 @@ public class UserController {
         return responseEntity;
     }
 
+    @GetMapping(value = "/getAllOdcManagerRequests/{odcName}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getOdcManagerRequests(@PathVariable String odcName) throws BusinessException {
+        ResponseEntity<?> responseEntity = null;
+        List<VisitorRequest> visitorRequests = userService.findAllAcceptedRequestedByManager(odcName);
+        if (visitorRequests != null)
+            responseEntity = new ResponseEntity<>(visitorRequests, HttpStatus.ACCEPTED);
+        return responseEntity;
+    }
+    
     @GetMapping(value = "/pendingVisitorRequest/{empId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> visitorRequestByStatus(@PathVariable int empId) throws BusinessException {
         ResponseEntity<?> responseEntity = null;
@@ -128,11 +137,11 @@ public class UserController {
         return responseEntity;
     }
 
-    @PostMapping(value = "/approveAccess", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/approveOrRejectAccess", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> approveAccess(@RequestBody VisitorRequest visitorRequest) throws BusinessException {
         ResponseEntity<?> responseEntity = null;
         try {
-            boolean success = userService.approveOdcRequest(visitorRequest);
+            boolean success = userService.approveOrRejectOdcRequest(visitorRequest);
             if (success)
                 responseEntity = new ResponseEntity<>(success, HttpStatus.ACCEPTED);
         } catch (BusinessException e) {
@@ -140,19 +149,32 @@ public class UserController {
         }
         return responseEntity;
     }
+    
+//    @PostMapping(value = "/approveAccess", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<?> approveAccess(@RequestBody VisitorRequest visitorRequest) throws BusinessException {
+//        ResponseEntity<?> responseEntity = null;
+//        try {
+//            boolean success = userService.approveOdcRequest(visitorRequest);
+//            if (success)
+//                responseEntity = new ResponseEntity<>(success, HttpStatus.ACCEPTED);
+//        } catch (BusinessException e) {
+//            responseEntity = new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+//        }
+//        return responseEntity;
+//    }
 
-    @PostMapping(value = "/rejectAccess", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> rejectAccess(@RequestBody VisitorRequest visitorRequest) throws BusinessException {
-        ResponseEntity<?> responseEntity = null;
-        try {
-            boolean success = userService.rejectOdcRequest(visitorRequest);
-            if (success)
-                responseEntity = new ResponseEntity<>(success, HttpStatus.ACCEPTED);
-        } catch (BusinessException e) {
-            responseEntity = new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
-        }
-        return responseEntity;
-    }
+//    @PostMapping(value = "/rejectAccess", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<?> rejectAccess(@RequestBody VisitorRequest visitorRequest) throws BusinessException {
+//        ResponseEntity<?> responseEntity = null;
+//        try {
+//            boolean success = userService.rejectOdcRequest(visitorRequest);
+//            if (success)
+//                responseEntity = new ResponseEntity<>(success, HttpStatus.ACCEPTED);
+//        } catch (BusinessException e) {
+//            responseEntity = new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+//        }
+//        return responseEntity;
+//    }
 
     @GetMapping(value = "manager/registration-request/{empId}")
     private List<UserInfo> getRegistrationRequestOfEmployee(@PathVariable int empId) {

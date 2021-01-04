@@ -21,5 +21,7 @@ public interface VisitorRequestRepository extends MongoRepository<VisitorRequest
     public List<VisitorRequest> findByManagerEmpID(int empId);
 
     Optional<VisitorRequest> findByVisitorRequestId(int id);
+     
+    public List<VisitorRequest> findAllByOdcAndStatus(String odcName,String status);
 
 }
