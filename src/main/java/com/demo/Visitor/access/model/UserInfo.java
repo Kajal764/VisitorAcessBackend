@@ -54,8 +54,7 @@ public class UserInfo {
 		this.accountActive = accountActive;
 		this.odc = odc;
 	}
-
-
+    
 	public boolean getAccountActive() {
 		return accountActive;
 	}
@@ -146,6 +145,7 @@ public class UserInfo {
         this.mobileNo = registerUserDto.mobileNo;
         this.role = registerUserDto.role;
         this.managerName = registerUserDto.managerName;
+        this.odc=registerUserDto.odc;
     }
 	
 	@Override

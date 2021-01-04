@@ -33,6 +33,16 @@ public class UserController {
             return new ResponseDto("Registration Successful", 200);
         throw new LoginException("Employee Id Exist", 400);
     }
+    
+//    @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
+//    private ResponseDto register(@Valid @RequestBody UserInfo userInfo) throws LoginException {
+//        boolean register = userService.register(userInfo);
+//        if (register)
+//            return new ResponseDto("Registration Successful", 200);
+//        throw new LoginException("Employee Id Exist", 400);
+//    }
+    
+    
 
     @PostMapping(value = "/login/{empId}/{password}", produces = MediaType.APPLICATION_JSON_VALUE)
     private ResponseEntity<?> userLogin(@PathVariable int empId, @PathVariable String password) {
@@ -159,6 +169,9 @@ public class UserController {
         return usr;
     }
 
+   
+    
+    
     @PostMapping(value = "/registration-request", consumes = MediaType.APPLICATION_JSON_VALUE)
     private ResponseDto acceptOrRejectRequest(@RequestBody RegistrationRequest registrationRequest) {
         return userService.registrationRequest(registrationRequest);
