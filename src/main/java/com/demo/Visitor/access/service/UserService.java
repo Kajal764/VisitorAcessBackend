@@ -40,10 +40,28 @@ public class UserService {
         Optional<UserInfo> user = userRepository.findByEmpId(registerUserDto.empId);
         if (user.isPresent())
             return false;
+        if(userInfo.getRole().equals("odcManager"))
+        	userInfo.setAccountActive(true);
+       else
         userInfo.setAccountActive(false);
         userRepository.save(userInfo);
         return true;
     }
+    
+//    public boolean register(UserInfo userInfo) {
+//        userInfo.password = bcryptPasswordEncoder.encode(userInfo.password);
+//      
+//        Optional<UserInfo> user = userRepository.findByEmpId(userInfo.empId);
+//        if (user.isPresent())
+//            return false;
+//        if(userInfo.getRole().equals("odcManager"))
+//        	userInfo.setAccountActive(true);
+//        else
+//        userInfo.setAccountActive(false);
+//        userRepository.save(userInfo);
+//        return true;
+//    }
+    
 
     public UserInfo login(int empId, String password) throws BusinessException {
         Optional<UserInfo> user = userRepository.findByEmpId(empId);
@@ -149,6 +167,11 @@ public class UserService {
         userInfoList.removeIf(user -> user.getAccountActive() == true);
         return userInfoList;
     }
+    
+
+  
+    
+    
 
     public ResponseDto registrationRequest(RegistrationRequest registrationRequest) {
         Optional<UserInfo> userInfo = userRepository.findByEmpId(registrationRequest.empId);
