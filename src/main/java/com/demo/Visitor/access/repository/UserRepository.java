@@ -24,6 +24,7 @@ public interface UserRepository extends MongoRepository<UserInfo, Integer> {
 
 	Optional<UserInfo> findByFirstName(String name);
 
+	List<UserInfo> findAllByOdc(String odc);
 
 
 }

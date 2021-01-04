@@ -83,6 +83,18 @@ public class UserController {
         }
         return responseEntity;
     }
+    
+    @RequestMapping(value = "/viewOdcManagers/{odcName}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> viewOdcManagers(@PathVariable String odcName) {
+        ResponseEntity<?> responseEntity = null;
+        try {
+            List<UserInfo> odcManagers = userService.findAllODCManagerByOdcName(odcName);
+            responseEntity = new ResponseEntity<>(odcManagers, HttpStatus.ACCEPTED);
+        } catch (BusinessException e) {
+            responseEntity = new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+        }
+        return responseEntity;
+    }
 
     @RequestMapping(value = "/odcList", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> odcLists() {

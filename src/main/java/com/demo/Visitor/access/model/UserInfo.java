@@ -33,8 +33,30 @@ public class UserInfo {
     private String managerName;
 
     private boolean accountActive;
+    
+    private String odc;
+    
+    public UserInfo() {
+    	
+    }
+    
+    public UserInfo(String firstName, String lastName, String email, String password, int empId, long mobileNo,
+			String role, String managerName, boolean accountActive, String odc) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.password = password;
+		this.empId = empId;
+		this.mobileNo = mobileNo;
+		this.role = role;
+		this.managerName = managerName;
+		this.accountActive = accountActive;
+		this.odc = odc;
+	}
 
-    public boolean getAccountActive() {
+
+	public boolean getAccountActive() {
 		return accountActive;
 	}
 
@@ -99,6 +121,14 @@ public class UserInfo {
 		this.mobileNo = mobileNo;
 	}
 
+	public String getOdc() {
+		return odc;
+	}
+
+	public void setOdc(String odc) {
+		this.odc = odc;
+	}
+
 	public String getManagerName() {
 		return managerName;
 	}
@@ -117,4 +147,11 @@ public class UserInfo {
         this.role = registerUserDto.role;
         this.managerName = registerUserDto.managerName;
     }
+	
+	@Override
+	public String toString() {
+		return "UserInfo [firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", password="
+				+ password + ", empId=" + empId + ", mobileNo=" + mobileNo + ", role=" + role + ", managerName="
+				+ managerName + ", accountActive=" + accountActive + ", odc=" + odc + "]";
+	}
 }

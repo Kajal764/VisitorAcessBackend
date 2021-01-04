@@ -12,15 +12,26 @@ public class ODCList {
 
     @Indexed(unique = true)
     private String odcName;
-
+    
+    private String flag;
+    
     public ODCList() {
     }
 
-    public ODCList(int odcId, String odcName) {
-        super();
-        this.odcId = odcId;
-        this.odcName = odcName;
-    }
+    public ODCList(int odcId, String odcName, String flag) {
+		super();
+		this.odcId = odcId;
+		this.odcName = odcName;
+		this.flag = flag;
+	}
+
+	public String getFlag() {
+		return flag;
+	}
+
+	public void setFlag(String flag) {
+		this.flag = flag;
+	}
 
     public int getOdcId() {
         return odcId;

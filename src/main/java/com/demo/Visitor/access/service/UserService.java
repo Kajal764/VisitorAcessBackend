@@ -40,6 +40,9 @@ public class UserService {
         Optional<UserInfo> user = userRepository.findByEmpId(registerUserDto.empId);
         if (user.isPresent())
             return false;
+        if(userInfo.getRole().equals("odcManager"))
+        	userInfo.setAccountActive(true);
+        else
         userInfo.setAccountActive(false);
         userRepository.save(userInfo);
         return true;
@@ -109,6 +112,15 @@ public class UserService {
             throw new BusinessException("No ODC is present");
         else
             return odcLists;
+    }
+    
+    public List<UserInfo> findAllODCManagerByOdcName(String odcName) throws BusinessException {
+    	System.out.println("In Service");
+        List<UserInfo> odcManagers = userRepository.findAllByOdc(odcName);
+        if (odcManagers == null)
+            throw new BusinessException("No ODC Manager is present");
+        else 
+            return odcManagers;
     }
 
     public boolean addOdc(ODCList odc) throws BusinessException {
