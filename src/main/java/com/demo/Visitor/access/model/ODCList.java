@@ -13,23 +13,23 @@ public class ODCList {
     @Indexed(unique = true)
     private String odcName;
     
-    private String flag;
+    private boolean flag;
     
     public ODCList() {
     }
 
-    public ODCList(int odcId, String odcName, String flag) {
+    public ODCList(int odcId, String odcName, boolean flag) {
 		super();
 		this.odcId = odcId;
 		this.odcName = odcName;
 		this.flag = flag;
 	}
 
-	public String getFlag() {
+	public boolean getFlag() {
 		return flag;
 	}
 
-	public void setFlag(String flag) {
+	public void setFlag(boolean flag) {
 		this.flag = flag;
 	}
 
@@ -49,9 +49,9 @@ public class ODCList {
         this.odcName = odcName;
     }
 
-    @Override
-    public String toString() {
-        return "ODCList [odcId=" + odcId + ", odcName=" + odcName + "]";
-    }
+	@Override
+	public String toString() {
+		return "ODCList [odcId=" + odcId + ", odcName=" + odcName + ", flag=" + flag + "]";
+	}
 
 }

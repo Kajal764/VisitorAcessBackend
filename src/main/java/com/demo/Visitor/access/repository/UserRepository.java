@@ -26,5 +26,8 @@ public interface UserRepository extends MongoRepository<UserInfo, Integer> {
 
 	List<UserInfo> findAllByOdc(String odc);
 
+	void insert(Optional<UserInfo> user);
+	
+
 
 }

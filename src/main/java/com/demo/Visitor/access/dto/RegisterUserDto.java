@@ -42,5 +42,6 @@ public class RegisterUserDto {
     
     @Column(nullable = false)
     public String odc;
+    
 
 }

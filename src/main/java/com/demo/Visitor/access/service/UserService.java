@@ -44,6 +44,7 @@ public class UserService {
         	userInfo.setAccountActive(true);
        else
         userInfo.setAccountActive(false);
+        userInfo.setFlag(true);
         userRepository.save(userInfo);
         return true;
     }
@@ -81,12 +82,17 @@ public class UserService {
 
     public List<UserInfo> getAllUserData() {
         List<UserInfo> userList = userRepository.findAll();
-        userList.removeIf(value -> value.getRole().equals("Admin"));
+        userList.removeIf(user->user.isFlag()==false);
+//        userList.removeIf(user -> user.getfl)
+//        userList.removeIf(value -> value.getRole().equals("Admin"));
         return userList;
     }
 
     public void deleteUser(int empId) {
+    	Optional<UserInfo> user = userRepository.findByEmpId(empId);
         userRepository.deleteByEmpId(empId);
+        user.get().setFlag(false);
+        userRepository.insert(user);
     }
 
     public boolean insertIntoVisitorRequest(VisitorRequest visitorRequest) throws BusinessException {
@@ -123,6 +129,7 @@ public class UserService {
 
     public List<ODCList> findAllODC() throws BusinessException {
         List<ODCList> odcLists = odcRepository.findAll();
+        odcLists.removeIf(odc -> odc.getFlag() == false);
         if (odcLists == null)
             throw new BusinessException("No ODC is present");
         else
@@ -150,6 +157,7 @@ public class UserService {
         Optional<ODCList> odcName = odcRepository.findByOdcName(odc.getOdcName());
         if (odcName.isPresent())
             throw new LoginException("Odc Already Exist", 400);
+        odc.setFlag(true);
         ODCList odcAdded = odcRepository.insert(odc);
         if (odcAdded == null)
             throw new BusinessException("Something went wrong!!!Please try again");
@@ -235,8 +243,11 @@ public class UserService {
         return userList;
     }
 
-    public boolean deleteOdc(String odcId) {
-        odcRepository.deleteByOdcName(odcId);
+    public boolean deleteOdc(String odcName) {
+    	Optional<ODCList> odc = odcRepository.findByOdcName(odcName);
+        odcRepository.deleteByOdcName(odcName);
+        odc.get().setFlag(false);
+        odcRepository.insert(odc);
         return true;
     }
 

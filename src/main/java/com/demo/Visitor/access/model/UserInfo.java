@@ -36,12 +36,14 @@ public class UserInfo {
     
     private String odc;
     
+    private boolean flag;
+    
     public UserInfo() {
     	
     }
     
-    public UserInfo(String firstName, String lastName, String email, String password, int empId, long mobileNo,
-			String role, String managerName, boolean accountActive, String odc) {
+	public UserInfo(String firstName, String lastName, String email, String password, int empId, long mobileNo,
+			String role, String managerName, boolean accountActive, String odc, boolean flag) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -53,8 +55,9 @@ public class UserInfo {
 		this.managerName = managerName;
 		this.accountActive = accountActive;
 		this.odc = odc;
+		this.flag = flag;
 	}
-    
+
 	public boolean getAccountActive() {
 		return accountActive;
 	}
@@ -135,6 +138,14 @@ public class UserInfo {
 	public void setManagerName(String managerName) {
 		this.managerName = managerName;
 	}
+	
+	public boolean isFlag() {
+		return flag;
+	}
+
+	public void setFlag(boolean flag) {
+		this.flag = flag;
+	}
 
 	public UserInfo(RegisterUserDto registerUserDto) {
         this.firstName = registerUserDto.firstName;
@@ -147,11 +158,12 @@ public class UserInfo {
         this.managerName = registerUserDto.managerName;
         this.odc=registerUserDto.odc;
     }
-	
+
 	@Override
 	public String toString() {
 		return "UserInfo [firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", password="
 				+ password + ", empId=" + empId + ", mobileNo=" + mobileNo + ", role=" + role + ", managerName="
-				+ managerName + ", accountActive=" + accountActive + ", odc=" + odc + "]";
+				+ managerName + ", accountActive=" + accountActive + ", odc=" + odc + ", flag=" + flag + "]";
 	}
+	
 }
