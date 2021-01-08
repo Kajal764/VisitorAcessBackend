@@ -42,7 +42,6 @@ public class UserController {
 //        throw new LoginException("Employee Id Exist", 400);
 //    }
     
-    
 
     @PostMapping(value = "/login/{empId}/{password}", produces = MediaType.APPLICATION_JSON_VALUE)
     private ResponseEntity<?> userLogin(@PathVariable int empId, @PathVariable String password) {
@@ -225,11 +224,10 @@ public class UserController {
         userService.deleteOdc(odcName);
         return new ResponseDto("ODC deleted from the list", 200);
     }
-    
-    
-    @GetMapping(value = "/searchemployees/{manager}", produces = MediaType.APPLICATION_JSON_VALUE)
-    private List<UserInfo> getEmployeesUnderManager(@PathVariable String manager) {
-        List<UserInfo> employeelist = userService.getEmployeesList(manager);
+
+    @GetMapping(value = "/searchEmployees/{employeeName}", produces = MediaType.APPLICATION_JSON_VALUE)
+    private List<UserInfo> getEmployeesUnderManager(@PathVariable String employeeName) {
+        List<UserInfo> employeelist = userService.getEmployeesList(employeeName);
         if (employeelist.size() == 0) {
             throw new LoginException("No Employees available", 400);
         }

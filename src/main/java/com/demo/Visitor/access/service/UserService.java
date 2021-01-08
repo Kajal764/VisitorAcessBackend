@@ -61,8 +61,6 @@ public class UserService {
 //        userInfo.setAccountActive(false);
 //        userRepository.save(userInfo);
 //        return true;
-//    }
-    
 
     public UserInfo login(int empId, String password) throws BusinessException {
         Optional<UserInfo> user = userRepository.findByEmpId(empId);
@@ -267,9 +265,8 @@ public class UserService {
 
 	public List<UserInfo> getEmployeesList(String manager) {
 		List<UserInfo> userInfoList = userRepository.findAllByManagerName(manager);
-		return null;
+		return userInfoList;
 	}
 
-	
 
 }

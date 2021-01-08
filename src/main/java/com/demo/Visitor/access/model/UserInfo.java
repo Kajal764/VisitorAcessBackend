@@ -2,7 +2,6 @@ package com.demo.Visitor.access.model;
 
 import com.demo.Visitor.access.dto.RegisterUserDto;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -12,7 +11,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Setter
 @ToString
 @Document
-@NoArgsConstructor
 public class UserInfo {
 
     private String firstName;
@@ -39,7 +37,6 @@ public class UserInfo {
     private boolean flag;
     
     public UserInfo() {
-    	
     }
     
 	public UserInfo(String firstName, String lastName, String email, String password, int empId, long mobileNo,
