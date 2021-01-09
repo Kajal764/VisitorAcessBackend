@@ -41,8 +41,8 @@ public class UserService {
         if (user.isPresent())
             return false;
         if(userInfo.getRole().equals("odcManager"))
-        	userInfo.setAccountActive(true);
-       else
+        	userInfo.setManagerName("Admin");
+
         userInfo.setAccountActive(false);
         userInfo.setFlag(true);
         userRepository.save(userInfo);
