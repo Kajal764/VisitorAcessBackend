@@ -226,12 +226,13 @@ public class UserController {
         return new ResponseDto("ODC deleted from the list", 200);
     }
     
-    @GetMapping(value = "/odcmanager/registration-request-list")
-    private List<UserInfo> getODCManagerRegistrationRequest() {
-        List<UserInfo> odcmanagerList = userService.getODCManagers();
-        if (odcmanagerList.size() == 0) {
-            throw new LoginException("No pending request", 400);
+    
+    @GetMapping(value = "/searchemployees/{manager}", produces = MediaType.APPLICATION_JSON_VALUE)
+    private List<UserInfo> getEmployeesUnderManager(@PathVariable String manager) {
+        List<UserInfo> employeelist = userService.getEmployeesList(manager);
+        if (employeelist.size() == 0) {
+            throw new LoginException("No Employees available", 400);
         }
-        return odcmanagerList;
+        return employeelist;
     }
 }

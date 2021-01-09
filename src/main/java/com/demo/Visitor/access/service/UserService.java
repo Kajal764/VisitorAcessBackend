@@ -264,11 +264,12 @@ public class UserService {
         return visitorRequestList;
     }
     
-    public List<UserInfo> getODCManagers() {
-        String name = "Admin";
-        List<UserInfo> userInfoList = userRepository.findAllByManagerName(name);
-        userInfoList.removeIf(user -> user.getAccountActive() == true);
-        return userInfoList;
-    }
+
+	public List<UserInfo> getEmployeesList(String manager) {
+		List<UserInfo> userInfoList = userRepository.findAllByManagerName(manager);
+		return null;
+	}
+
+	
 
 }
