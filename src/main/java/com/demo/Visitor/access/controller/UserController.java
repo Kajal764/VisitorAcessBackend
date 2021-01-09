@@ -225,4 +225,13 @@ public class UserController {
         userService.deleteOdc(odcName);
         return new ResponseDto("ODC deleted from the list", 200);
     }
+    
+    @GetMapping(value = "/odcmanager/registration-request-list")
+    private List<UserInfo> getODCManagerRegistrationRequest() {
+        List<UserInfo> odcmanagerList = userService.getODCManagers();
+        if (odcmanagerList.size() == 0) {
+            throw new LoginException("No pending request", 400);
+        }
+        return odcmanagerList;
+    }
 }

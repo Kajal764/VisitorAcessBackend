@@ -263,5 +263,12 @@ public class UserService {
             throw new BusinessException("No Requests Raised!!");
         return visitorRequestList;
     }
+    
+    public List<UserInfo> getODCManagers() {
+        String name = "Admin";
+        List<UserInfo> userInfoList = userRepository.findAllByManagerName(name);
+        userInfoList.removeIf(user -> user.getAccountActive() == true);
+        return userInfoList;
+    }
 
 }
