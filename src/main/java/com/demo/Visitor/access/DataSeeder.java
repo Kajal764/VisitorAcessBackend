@@ -19,17 +19,19 @@ public class DataSeeder {
     @Bean
     CommandLineRunner initDatabase(UserRepository userRepository) {
         return args -> {
-            if (userRepository.findByEmpId(666666).isEmpty()) {
-                RegisterUserDto adminDTO = new RegisterUserDto("admin", "admin", "admin@gmail.com", "Admin@123", 6666666, 9090909090L, "Admin", "Admin", "");
+            if (userRepository.findByEmpId("Admin").isEmpty()) {
+                RegisterUserDto adminDTO = new RegisterUserDto("admin", "admin", "admin@gmail.com", "Admin@123", "Admin", 9090909090L, "Admin", "Admin", "");
                 adminDTO.password = bcryptPasswordEncoder.encode(adminDTO.password);
                 UserInfo userInfo = new UserInfo(adminDTO);
+                userInfo.setFlag(true);
                 userInfo.setAccountActive(true);
                 userRepository.save(userInfo);
             }
-            if (userRepository.findByEmpId(7777777).isEmpty()) {
-                RegisterUserDto adminDTO = new RegisterUserDto("Manager", "Manager", "Manager@gmail.com", "Manager@123", 7777777, 9090909090L, "Manager", "Admin", "");
+            if (userRepository.findByEmpId("7777777").isEmpty()) {
+                RegisterUserDto adminDTO = new RegisterUserDto("Manager", "Manager", "Manager@gmail.com", "Manager@123", "7777777", 9090909090L, "Manager", "Admin", "");
                 adminDTO.password = bcryptPasswordEncoder.encode(adminDTO.password);
                 UserInfo userInfo = new UserInfo(adminDTO);
+                userInfo.setFlag(true);
                 userInfo.setAccountActive(true);
                 userRepository.save(userInfo);
             }

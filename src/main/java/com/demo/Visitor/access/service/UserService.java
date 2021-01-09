@@ -40,34 +40,21 @@ public class UserService {
         Optional<UserInfo> user = userRepository.findByEmpId(registerUserDto.empId);
         if (user.isPresent())
             return false;
-        if(userInfo.getRole().equals("odcManager"))
-        	userInfo.setManagerName("Admin");
-
+        if (userInfo.getRole().equals("odcManager"))
+            userInfo.setManagerName("Admin");
         userInfo.setAccountActive(false);
         userInfo.setFlag(true);
         userRepository.save(userInfo);
         return true;
     }
-    
-//    public boolean register(UserInfo userInfo) {
-//        userInfo.password = bcryptPasswordEncoder.encode(userInfo.password);
-//      
-//        Optional<UserInfo> user = userRepository.findByEmpId(userInfo.empId);
-//        if (user.isPresent())
-//            return false;
-//        if(userInfo.getRole().equals("odcManager"))
-//        	userInfo.setAccountActive(true);
-//        else
-//        userInfo.setAccountActive(false);
-//        userRepository.save(userInfo);
-//        return true;
 
-    public UserInfo login(int empId, String password) throws BusinessException {
+    public UserInfo login(String empId, String password) throws BusinessException {
+
         Optional<UserInfo> user = userRepository.findByEmpId(empId);
         if (user.isPresent()) {
-            if (user.get().getEmpId() == empId) {
+            if (user.get().getEmpId().equals(empId)) {
                 if (bcryptPasswordEncoder.matches(password, user.get().getPassword())) {
-                    if (user.get().getAccountActive()) {
+                    if (user.get().isAccountActive()) {
                         return user.get();
                     }
                     throw new BusinessException("Registration request not approved");
@@ -80,14 +67,13 @@ public class UserService {
 
     public List<UserInfo> getAllUserData() {
         List<UserInfo> userList = userRepository.findAll();
-        userList.removeIf(user->user.isFlag()==false);
-//        userList.removeIf(user -> user.getfl)
-//        userList.removeIf(value -> value.getRole().equals("Admin"));
+        userList.removeIf(user -> user.isFlag() == false);
+        userList.removeIf(value -> value.getRole().equals("Admin"));
         return userList;
     }
 
-    public void deleteUser(int empId) {
-    	Optional<UserInfo> user = userRepository.findByEmpId(empId);
+    public void deleteUser(String empId) {
+        Optional<UserInfo> user = userRepository.findByEmpId(empId);
         userRepository.deleteByEmpId(empId);
         user.get().setFlag(false);
         userRepository.insert(user);
@@ -97,7 +83,7 @@ public class UserService {
         Optional<UserInfo> user = userRepository.findByEmpId(visitorRequest.getEmpId());
         int random_id;
         if (visitorRequest.getEmployee() == 0) {
-            visitorRequest.setManagerEmpID(6666666);
+            visitorRequest.setManagerEmpID("Admin");
         } else {
             String[] name = user.get().getManagerName().split(" ");
             Optional<UserInfo> manager = userRepository.findByFirstName(name[0]);
@@ -117,12 +103,20 @@ public class UserService {
             return true;
     }
 
-    public List<VisitorRequest> viewOdcRequest(int empId) throws BusinessException {
+    public List<VisitorRequest> viewOdcRequest(String empId) throws BusinessException {
         List<VisitorRequest> visitorRequests = visitorRequestRepository.findAllByEmpId(empId);
         if (visitorRequests == null)
             throw new BusinessException("No requests has been raised for this employee Id");
         else
             return visitorRequests;
+    }
+
+    public List<UserInfo> findAllODCManagerByOdcName(String odcName) throws BusinessException {
+        List<UserInfo> odcManagers = userRepository.findAllByOdc(odcName);
+        if (odcManagers == null)
+            throw new BusinessException("No ODC Manager is present");
+        else
+            return odcManagers;
     }
 
     public List<ODCList> findAllODC() throws BusinessException {
@@ -133,21 +127,12 @@ public class UserService {
         else
             return odcLists;
     }
-    
-    public List<UserInfo> findAllODCManagerByOdcName(String odcName) throws BusinessException {
-    	System.out.println("In Service");
-        List<UserInfo> odcManagers = userRepository.findAllByOdc(odcName);
-        if (odcManagers == null)
-            throw new BusinessException("No ODC Manager is present");
-        else 
-            return odcManagers;
-    }
-    
+
     public List<VisitorRequest> findAllAcceptedRequestedByManager(String odcName) throws BusinessException {
         List<VisitorRequest> requests = visitorRequestRepository.findAllByOdcAndStatus(odcName, "Accepted By Manager");
         if (requests == null)
             throw new BusinessException("No Request is present");
-        else 
+        else
             return requests;
     }
 
@@ -163,27 +148,16 @@ public class UserService {
             return true;
     }
 
-
-//    public boolean approveOdcRequest(VisitorRequest visitorRequest) throws BusinessException {
-//        visitorRequestRepository.deleteByVisitorRequestId(visitorRequest.getVisitorRequestId());
-//        visitorRequest.setStatus("Accepted By Manager");
-//        VisitorRequest success = visitorRequestRepository.save(visitorRequest);
-//        if (success == null)
-//            throw new BusinessException("Request Cannot be Approved");
-//        else
-//            return true;
-//    }
-    
     public boolean approveOrRejectOdcRequest(VisitorRequest visitorRequest) throws BusinessException {
         visitorRequestRepository.deleteByVisitorRequestId(visitorRequest.getVisitorRequestId());
-        if(visitorRequest.getStatus().equals("Accepted By Manager"))
-        visitorRequest.setStatus("Accepted By Manager");
-        else if(visitorRequest.getStatus().equals("Approved"))
-        visitorRequest.setStatus("Approved");
-        else if(visitorRequest.getStatus().equals("Rejected By Manager"))
-        visitorRequest.setStatus("Rejected By Manager");
-        else if(visitorRequest.getStatus().equals("Rejected"))
-        visitorRequest.setStatus("Rejected");
+        if (visitorRequest.getStatus().equals("Accepted By Manager"))
+            visitorRequest.setStatus("Accepted By Manager");
+        else if (visitorRequest.getStatus().equals("Approved"))
+            visitorRequest.setStatus("Approved");
+        else if (visitorRequest.getStatus().equals("Rejected By Manager"))
+            visitorRequest.setStatus("Rejected By Manager");
+        else if (visitorRequest.getStatus().equals("Rejected"))
+            visitorRequest.setStatus("Rejected");
         VisitorRequest success = visitorRequestRepository.save(visitorRequest);
         if (success == null)
             throw new BusinessException("Request Cannot be Approved");
@@ -191,28 +165,12 @@ public class UserService {
             return true;
     }
 
-//    public boolean rejectOdcRequest(VisitorRequest visitorRequest) throws BusinessException {
-//        visitorRequestRepository.deleteByVisitorRequestId(visitorRequest.getVisitorRequestId());
-//        visitorRequest.setStatus("Rejected By Manager");
-//        VisitorRequest success = visitorRequestRepository.save(visitorRequest);
-//        if (success == null)
-//            throw new BusinessException("Request Cannot be Rejected");
-//        else
-//            return true;
-//    }
-    
-
     public List<UserInfo> getManagerList() {
         List<UserInfo> userInfoList = userRepository.findAll();
         userInfoList.removeIf(user -> user.getRole().equals("Employee"));
-        userInfoList.removeIf(user -> user.getAccountActive() == true);
+        userInfoList.removeIf(user -> user.isAccountActive() == true);
         return userInfoList;
     }
-    
-
-  
-    
-    
 
     public ResponseDto registrationRequest(RegistrationRequest registrationRequest) {
         Optional<UserInfo> userInfo = userRepository.findByEmpId(registrationRequest.empId);
@@ -220,19 +178,21 @@ public class UserService {
             userRepository.deleteByEmpId(userInfo.get().getEmpId());
             userInfo.get().setAccountActive(true);
             userRepository.save(userInfo.get());
-            System.out.println(userInfo.get());
             return new ResponseDto("Request accept", 200);
         }
         userRepository.deleteByEmpId(registrationRequest.empId);
         return new ResponseDto("Request reject", 200);
     }
 
-    public List<UserInfo> getRegistrationRequestOfEmployee(int empId) {
+    public List<UserInfo> getRegistrationRequestOfEmployee(String empId) {
         Optional<UserInfo> manager = userRepository.findByEmpId(empId);
-        String name = manager.get().getFirstName() + " " + manager.get().getLastName();
-        List<UserInfo> userInfoList = userRepository.findAllByManagerName(name);
-        userInfoList.removeIf(value -> value.getAccountActive()==true);
-        return userInfoList;
+        if(manager.isPresent()){
+            String name = manager.get().getFirstName() + " " + manager.get().getLastName();
+            List<UserInfo> userInfoList = userRepository.findAllByManagerName(name);
+            userInfoList.removeIf(value -> value.isAccountActive() == true);
+            return userInfoList;
+        }
+        return null;
     }
 
     public List<UserInfo> managerList() {
@@ -242,31 +202,33 @@ public class UserService {
     }
 
     public boolean deleteOdc(String odcName) {
-    	Optional<ODCList> odc = odcRepository.findByOdcName(odcName);
+        Optional<ODCList> odc = odcRepository.findByOdcName(odcName);
         odcRepository.deleteByOdcName(odcName);
         odc.get().setFlag(false);
         odcRepository.insert(odc);
         return true;
     }
 
-    public List<VisitorRequest> getPendingVisitorRequest(int empId) throws BusinessException {
+    public List<VisitorRequest> getPendingVisitorRequest(String empId) throws BusinessException {
         Optional<UserInfo> user = userRepository.findByEmpId(empId);
         List<VisitorRequest> visitorRequestList = visitorRequestRepository.findByManagerEmpID(empId);
-        if (user.get().getRole().equals("Manager")) {
-            visitorRequestList.removeIf(value -> value.getEmployee() == 0);
-        } else {
-            visitorRequestList.removeIf(value -> value.getEmployee() == 1);
+        if(user.isPresent()){
+            if (user.get().getRole().equals("Manager")) {
+                visitorRequestList.removeIf(value -> value.getEmployee() == 0);
+            } else {
+                visitorRequestList.removeIf(value -> value.getEmployee() == 1);
+            }
+            if (visitorRequestList == null)
+                throw new BusinessException("No Requests Raised!!");
+            return visitorRequestList;
         }
-        if (visitorRequestList == null)
-            throw new BusinessException("No Requests Raised!!");
-        return visitorRequestList;
+        return null;
     }
-    
 
-	public List<UserInfo> getEmployeesList(String manager) {
-		List<UserInfo> userInfoList = userRepository.findAllByManagerName(manager);
-		return userInfoList;
-	}
+    public List<UserInfo> getEmployeesList(String manager) {
+        List<UserInfo> userInfoList = userRepository.findAllByManagerName(manager);
+        return userInfoList;
+    }
 
 
 }

@@ -28,7 +28,7 @@ public class RegisterUserDto {
 
     @Column(nullable = false)
     @Pattern(regexp = "^[0-9]\\d{6}$", message = "Employee Id should be 7 digit")
-    public int empId;
+    public String empId;
 
     @Column(nullable = false)
     @Pattern(regexp = "^[0-9]\\d{9}$", message = "Mobile no invalid")

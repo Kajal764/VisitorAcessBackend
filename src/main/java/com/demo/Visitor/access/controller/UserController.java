@@ -33,18 +33,10 @@ public class UserController {
             return new ResponseDto("Registration Successful", 200);
         throw new LoginException("Employee Id Exist", 400);
     }
-    
-//    @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
-//    private ResponseDto register(@Valid @RequestBody UserInfo userInfo) throws LoginException {
-//        boolean register = userService.register(userInfo);
-//        if (register)
-//            return new ResponseDto("Registration Successful", 200);
-//        throw new LoginException("Employee Id Exist", 400);
-//    }
-    
+
 
     @PostMapping(value = "/login/{empId}/{password}", produces = MediaType.APPLICATION_JSON_VALUE)
-    private ResponseEntity<?> userLogin(@PathVariable int empId, @PathVariable String password) {
+    private ResponseEntity<?> userLogin(@PathVariable String empId, @PathVariable String password) {
         UserInfo users;
         try {
             users = userService.login(empId, password);
@@ -64,7 +56,7 @@ public class UserController {
     }
 
     @DeleteMapping(value = "/{empId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    private ResponseDto deleteUser(@PathVariable int empId) {
+    private ResponseDto deleteUser(@PathVariable String empId) {
         userService.deleteUser(empId);
         return new ResponseDto("Employee data deleted", 200);
     }
@@ -82,7 +74,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/viewUserRequests/{empId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> viewUserRequest(@PathVariable int empId) {
+    public ResponseEntity<?> viewUserRequest(@PathVariable String empId) {
         ResponseEntity<?> responseEntity = null;
         try {
             List<VisitorRequest> visitorRequests = userService.viewOdcRequest(empId);
@@ -92,7 +84,7 @@ public class UserController {
         }
         return responseEntity;
     }
-    
+
     @RequestMapping(value = "/viewOdcManagers/{odcName}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> viewOdcManagers(@PathVariable String odcName) {
         ResponseEntity<?> responseEntity = null;
@@ -126,9 +118,9 @@ public class UserController {
             responseEntity = new ResponseEntity<>(visitorRequests, HttpStatus.ACCEPTED);
         return responseEntity;
     }
-    
+
     @GetMapping(value = "/pendingVisitorRequest/{empId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> visitorRequestByStatus(@PathVariable int empId) throws BusinessException {
+    public ResponseEntity<?> visitorRequestByStatus(@PathVariable String empId) throws BusinessException {
         ResponseEntity<?> responseEntity = null;
         List<VisitorRequest> visitorRequests = userService.getPendingVisitorRequest(empId);
         if (visitorRequests != null)
@@ -148,36 +140,11 @@ public class UserController {
         }
         return responseEntity;
     }
-    
-//    @PostMapping(value = "/approveAccess", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<?> approveAccess(@RequestBody VisitorRequest visitorRequest) throws BusinessException {
-//        ResponseEntity<?> responseEntity = null;
-//        try {
-//            boolean success = userService.approveOdcRequest(visitorRequest);
-//            if (success)
-//                responseEntity = new ResponseEntity<>(success, HttpStatus.ACCEPTED);
-//        } catch (BusinessException e) {
-//            responseEntity = new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
-//        }
-//        return responseEntity;
-//    }
 
-//    @PostMapping(value = "/rejectAccess", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<?> rejectAccess(@RequestBody VisitorRequest visitorRequest) throws BusinessException {
-//        ResponseEntity<?> responseEntity = null;
-//        try {
-//            boolean success = userService.rejectOdcRequest(visitorRequest);
-//            if (success)
-//                responseEntity = new ResponseEntity<>(success, HttpStatus.ACCEPTED);
-//        } catch (BusinessException e) {
-//            responseEntity = new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
-//        }
-//        return responseEntity;
-//    }
 
-    @GetMapping(value = "manager/registration-request/{empId}")
-    private List<UserInfo> getRegistrationRequestOfEmployee(@PathVariable int empId) {
-        List<UserInfo> registrationRequestOfEmployee = userService.getRegistrationRequestOfEmployee(empId);
+    @GetMapping(value = "manager/registration-request/{empId}",produces = MediaType.APPLICATION_JSON_VALUE)
+    private List<UserInfo> getRegistrationRequestOfEmployee(@PathVariable String empId) {
+        List<UserInfo> registrationRequestOfEmployee = userService.getRegistrationRequestOfEmployee(empId );
         if (registrationRequestOfEmployee.size() == 0) {
             throw new LoginException("No pending request", 400);
         }
@@ -190,22 +157,20 @@ public class UserController {
         return usr;
     }
 
-   
-    
-    
+
     @PostMapping(value = "/registration-request", consumes = MediaType.APPLICATION_JSON_VALUE)
     private ResponseDto acceptOrRejectRequest(@RequestBody RegistrationRequest registrationRequest) {
         return userService.registrationRequest(registrationRequest);
     }
 
-    @GetMapping(value = "/manager/registration-request-list")
-    private List<UserInfo> getManagerRegistrationRequest() {
-        List<UserInfo> managerList = userService.getManagerList();
-        if (managerList.size() == 0) {
-            throw new LoginException("No pending request", 400);
-        }
-        return managerList;
-    }
+//    @GetMapping(value = "/manager/registration-request-list")
+//    private List<UserInfo> getManagerRegistrationRequest() {
+//        List<UserInfo> managerList = userService.getManagerList();
+//        if (managerList.size() == 0) {
+//            throw new LoginException("No pending request", 400);
+//        }
+//        return managerList;
+//    }
 
     @PostMapping(value = "/addOdc", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addODC(@RequestBody ODCList odc) throws BusinessException {

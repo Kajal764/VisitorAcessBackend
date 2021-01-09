@@ -22,7 +22,7 @@ public class UserInfo {
     private String password;
 
     @Indexed(unique = true)
-    private int empId;
+    private String empId;
 
     private long mobileNo;
 
@@ -31,120 +31,16 @@ public class UserInfo {
     private String managerName;
 
     private boolean accountActive;
-    
+
     private String odc;
-    
+
     private boolean flag;
-    
+
     public UserInfo() {
     }
-    
-	public UserInfo(String firstName, String lastName, String email, String password, int empId, long mobileNo,
-			String role, String managerName, boolean accountActive, String odc, boolean flag) {
-		super();
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
-		this.password = password;
-		this.empId = empId;
-		this.mobileNo = mobileNo;
-		this.role = role;
-		this.managerName = managerName;
-		this.accountActive = accountActive;
-		this.odc = odc;
-		this.flag = flag;
-	}
 
-	public boolean getAccountActive() {
-		return accountActive;
-	}
 
-	public String getRole() {
-		return role;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
-	}
-
-	public void setAccountActive(boolean accountActive) {
-		this.accountActive = accountActive;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public int getEmpId() {
-		return empId;
-	}
-
-	public void setEmpId(int empId) {
-		this.empId = empId;
-	}
-	
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public long getMobileNo() {
-		return mobileNo;
-	}
-
-	public void setMobileNo(long mobileNo) {
-		this.mobileNo = mobileNo;
-	}
-
-	public String getOdc() {
-		return odc;
-	}
-
-	public void setOdc(String odc) {
-		this.odc = odc;
-	}
-
-	public String getManagerName() {
-		return managerName;
-	}
-
-	public void setManagerName(String managerName) {
-		this.managerName = managerName;
-	}
-	
-	public boolean isFlag() {
-		return flag;
-	}
-
-	public void setFlag(boolean flag) {
-		this.flag = flag;
-	}
-
-	public UserInfo(RegisterUserDto registerUserDto) {
+    public UserInfo(RegisterUserDto registerUserDto) {
         this.firstName = registerUserDto.firstName;
         this.lastName = registerUserDto.lastName;
         this.email = registerUserDto.email;
@@ -153,14 +49,8 @@ public class UserInfo {
         this.mobileNo = registerUserDto.mobileNo;
         this.role = registerUserDto.role;
         this.managerName = registerUserDto.managerName;
-        this.odc=registerUserDto.odc;
+        this.odc = registerUserDto.odc;
     }
 
-	@Override
-	public String toString() {
-		return "UserInfo [firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", password="
-				+ password + ", empId=" + empId + ", mobileNo=" + mobileNo + ", role=" + role + ", managerName="
-				+ managerName + ", accountActive=" + accountActive + ", odc=" + odc + ", flag=" + flag + "]";
-	}
-	
+
 }

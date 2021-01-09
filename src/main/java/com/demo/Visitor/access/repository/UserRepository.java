@@ -1,7 +1,6 @@
 package com.demo.Visitor.access.repository;
 
 import com.demo.Visitor.access.model.UserInfo;
-import com.demo.Visitor.access.model.VisitorRequest;
 
 import org.springframework.data.mongodb.repository.DeleteQuery;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -13,12 +12,10 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends MongoRepository<UserInfo, Integer> {
 
-	Optional<UserInfo> findByEmpId(int empId);
+	Optional<UserInfo> findByEmpId(String empId);
 
 	@DeleteQuery
-	void deleteByEmpId(int empId);
-
-	public List<UserInfo> findByRole(String role);
+	void deleteByEmpId(String empId);
 
     List<UserInfo> findAllByManagerName(String firstName);
 
