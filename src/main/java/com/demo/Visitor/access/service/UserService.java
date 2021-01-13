@@ -197,7 +197,7 @@ public class UserService {
 
     public List<UserInfo> managerList() {
         List<UserInfo> userList = userRepository.findAll();
-        userList.removeIf((value -> (value.getRole().equals("Employee") | value.getRole().equals("Admin"))));
+        userList.removeIf((value -> (value.getRole().equals("Employee") | value.getRole().equals("Admin") | value.getRole().equals("odcManager"))));
         return userList;
     }
 
