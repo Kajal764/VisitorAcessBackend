@@ -84,7 +84,10 @@ public class UserService {
         int random_id;
         if (visitorRequest.getEmployee() == 0) {
             visitorRequest.setManagerEmpID("Admin");
-        } else {
+        }else if (visitorRequest.getEmployee() == 2) {
+            visitorRequest.setManagerEmpID("7777777");
+        }
+        else {
             String[] name = user.get().getManagerName().split(" ");
             Optional<UserInfo> manager = userRepository.findByFirstName(name[0]);
             visitorRequest.setManagerEmpID(manager.get().getEmpId());
