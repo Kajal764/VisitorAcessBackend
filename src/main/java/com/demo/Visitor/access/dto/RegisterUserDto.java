@@ -39,9 +39,8 @@ public class RegisterUserDto {
 
     @Column(nullable = false)
     public String managerName;
-    
+
     @Column(nullable = false)
     public String odc;
-    
 
 }

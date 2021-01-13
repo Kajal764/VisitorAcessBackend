@@ -28,14 +28,13 @@ public class DataSeeder {
                 userRepository.save(userInfo);
             }
             if (userRepository.findByEmpId("7777777").isEmpty()) {
-                RegisterUserDto adminDTO = new RegisterUserDto("Manager", "Manager", "Manager@gmail.com", "Manager@123", "7777777", 9090909090L, "Manager", "Admin", "");
+                RegisterUserDto adminDTO = new RegisterUserDto("Manager", "Manager", "Manager@gmail.com", "Manager@123", "7777777", 9090909090L, "Manager", "admin admin", "");
                 adminDTO.password = bcryptPasswordEncoder.encode(adminDTO.password);
                 UserInfo userInfo = new UserInfo(adminDTO);
                 userInfo.setFlag(true);
                 userInfo.setAccountActive(true);
                 userRepository.save(userInfo);
             }
-
         };
     }
 }
