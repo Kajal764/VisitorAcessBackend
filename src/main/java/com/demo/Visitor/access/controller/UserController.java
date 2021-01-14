@@ -60,7 +60,7 @@ public class UserController {
         return new ResponseDto("Employee data deleted", 200);
     }
 
-    @RequestMapping(value = "/raiseOdcRequest", method = RequestMethod.POST)
+    @PostMapping(value = "/raiseOdcRequest")
     public ResponseEntity<?> raiseOdcRequest(@RequestBody VisitorRequest visitorRequest) {
         ResponseEntity<?> responseEntity = null;
         try {
@@ -72,7 +72,7 @@ public class UserController {
         return responseEntity;
     }
 
-    @RequestMapping(value = "/viewUserRequests/{empId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/viewUserRequests/{empId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> viewUserRequest(@PathVariable String empId) {
         ResponseEntity<?> responseEntity = null;
         try {
@@ -84,7 +84,7 @@ public class UserController {
         return responseEntity;
     }
 
-    @RequestMapping(value = "/viewOdcManagers/{odcName}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/viewOdcManagers/{odcName}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> viewOdcManagers(@PathVariable String odcName) {
         ResponseEntity<?> responseEntity = null;
         try {
@@ -96,7 +96,7 @@ public class UserController {
         return responseEntity;
     }
 
-    @RequestMapping(value = "/odcList", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/odcList", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> odcLists() {
         ResponseEntity<?> responseEntity = null;
         try {
