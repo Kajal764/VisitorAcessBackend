@@ -150,8 +150,11 @@ public class UserService {
 
     public boolean addOdc(ODCList odc) throws BusinessException {
         Optional<ODCList> odcName = odcRepository.findByOdcName(odc.getOdcName());
-        if (odcName.isPresent())
+        if (odcName.isPresent() && odcName.get().getFlag() == true)
             throw new LoginException("Odc Already Exist", 400);
+        if(odcName.get().getFlag()==false && odcName.isPresent()){
+            odcRepository.deleteByOdcName(odcName.get().getOdcName());
+        }
         odc.setFlag(true);
         ODCList odcAdded = odcRepository.save(odc);
         List<VisitorRequest> allByOdc = visitorRequestRepository.findAllByOdc(odc.getOdcName());
@@ -183,18 +186,25 @@ public class UserService {
             return true;
     }
 
-    public ResponseDto registrationRequest(RegistrationRequest registrationRequest) {
-        Optional<UserInfo> userInfo = userRepository.findByEmpId(registrationRequest.empId);
-        if (registrationRequest.status == true) {
-            userRepository.deleteByEmpId(userInfo.get().getEmpId());
-            userInfo.get().setAccountActive(true);
-            userRepository.save(userInfo.get());
-            return new ResponseDto("Request accept", 200);
+    public ResponseDto registrationRequest(List<RegistrationRequest> registrationRequest) {
+        int count = 0;
+        for (int i = 0; i < registrationRequest.size(); i++) {
+            Optional<UserInfo> userInfo = userRepository.findByEmpId(registrationRequest.get(i).empId);
+            if (userInfo.isPresent() && registrationRequest.get(i).status == true) {
+                userRepository.deleteByEmpId(userInfo.get().getEmpId());
+                userInfo.get().setAccountActive(true);
+                userRepository.save(userInfo.get());
+                count++;
+            } else {
+                userRepository.deleteByEmpId(userInfo.get().getEmpId());
+                userInfo.get().setFlag(false);
+                userRepository.save(userInfo.get());
+                count--;
+            }
         }
-        userRepository.deleteByEmpId(userInfo.get().getEmpId());
-        userInfo.get().setFlag(false);
-        userRepository.save(userInfo.get());
-        return new ResponseDto("Request reject", 200);
+        if (count == registrationRequest.size())
+            return new ResponseDto("All request accepted", 200);
+        return new ResponseDto("Some request rejected", 200);
     }
 
     public List<UserInfo> getRegistrationRequestOfEmployee(String empId) {
@@ -228,6 +238,12 @@ public class UserService {
             visitorRequestRepository.deleteByVisitorRequestId(value.getVisitorRequestId());
             visitorRequestRepository.save(value);
         });
+        List<UserInfo> userInfos = userRepository.findAllByOdc(odcName);
+        userInfos.forEach(userInfo ->{
+            userInfo.getOdc().remove(odcName);
+            userRepository.deleteByEmpId(userInfo.getEmpId());
+            userRepository.save(userInfo);
+        } );
         return true;
     }
 
