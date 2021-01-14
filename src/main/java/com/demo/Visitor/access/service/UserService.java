@@ -40,8 +40,8 @@ public class UserService {
         Optional<UserInfo> user = userRepository.findByEmpId(registerUserDto.empId);
         if (user.isPresent())
             return false;
-        if (userInfo.getRole().equals("odcManager"))
-            userInfo.setManagerName("admin admin");
+        if (userInfo.getRole().contains("Odc-Manager") && userInfo.getRole().contains("Employee"))
+            userInfo.setManagerName("Admin ");
         userInfo.setAccountActive(false);
         userInfo.setFlag(true);
         userRepository.save(userInfo);
@@ -82,16 +82,16 @@ public class UserService {
     public boolean insertIntoVisitorRequest(VisitorRequest visitorRequest) throws BusinessException {
         Optional<UserInfo> user = userRepository.findByEmpId(visitorRequest.getEmpId());
         int random_id;
-        if (visitorRequest.getEmployee() == 0) {
-            visitorRequest.setManagerEmpID("Admin");
-        }else if (visitorRequest.getEmployee() == 2) {
-            visitorRequest.setManagerEmpID("7777777");
-        }
-        else {
-            String[] name = user.get().getManagerName().split(" ");
-            Optional<UserInfo> manager = userRepository.findByFirstName(name[0]);
-            visitorRequest.setManagerEmpID(manager.get().getEmpId());
-        }
+//        if (visitorRequest.getEmployee() == 0) {
+//            visitorRequest.setManagerEmpID("Admin");
+//        }else if (visitorRequest.getEmployee() == 2) {
+//            visitorRequest.setManagerEmpID("7777777");
+//        }
+//        else {
+        String[] name = user.get().getManagerName().split(" ");
+        Optional<UserInfo> manager = userRepository.findByFirstName(name[0]);
+        visitorRequest.setManagerEmpID(manager.get().getEmpId());
+//        }
         Random random = new Random();
         random_id = random.nextInt();
         Optional<VisitorRequest> byVisitorRequestId = visitorRequestRepository.findByVisitorRequestId(random_id);
@@ -168,12 +168,6 @@ public class UserService {
             return true;
     }
 
-    public List<UserInfo> getManagerList() {
-        List<UserInfo> userInfoList = userRepository.findAll();
-        userInfoList.removeIf(user -> user.getRole().equals("Employee"));
-        userInfoList.removeIf(user -> user.isAccountActive() == true);
-        return userInfoList;
-    }
 
     public ResponseDto registrationRequest(RegistrationRequest registrationRequest) {
         Optional<UserInfo> userInfo = userRepository.findByEmpId(registrationRequest.empId);
@@ -189,7 +183,7 @@ public class UserService {
 
     public List<UserInfo> getRegistrationRequestOfEmployee(String empId) {
         Optional<UserInfo> manager = userRepository.findByEmpId(empId);
-        if(manager.isPresent()){
+        if (manager.isPresent()) {
             String name = manager.get().getFirstName() + " " + manager.get().getLastName();
             List<UserInfo> userInfoList = userRepository.findAllByManagerName(name);
             userInfoList.removeIf(value -> value.isAccountActive() == true);
@@ -199,9 +193,10 @@ public class UserService {
     }
 
     public List<UserInfo> managerList() {
-        List<UserInfo> userList = userRepository.findAll();
-        userList.removeIf((value -> (value.getRole().equals("Employee") | value.getRole().equals("Admin") | value.getRole().equals("odcManager"))));
-        return userList;
+        List<UserInfo> manager = userRepository.findAllByRole("Manager");
+        manager.removeIf(user -> user.getRole().contains("Admin"));
+        manager.removeIf(userInfo -> userInfo.isAccountActive() == false);
+        return manager;
     }
 
     public boolean deleteOdc(String odcName) {
@@ -214,15 +209,9 @@ public class UserService {
 
     public List<VisitorRequest> getPendingVisitorRequest(String empId) throws BusinessException {
         Optional<UserInfo> user = userRepository.findByEmpId(empId);
+        System.out.println(user);
         List<VisitorRequest> visitorRequestList = visitorRequestRepository.findByManagerEmpID(empId);
-        if(user.isPresent()){
-            if (user.get().getRole().equals("Manager")) {
-                visitorRequestList.removeIf(value -> value.getEmployee() == 0);
-            } else {
-                visitorRequestList.removeIf(value -> value.getEmployee() == 1);
-            }
-            if (visitorRequestList == null)
-                throw new BusinessException("No Requests Raised!!");
+        if (user.isPresent()) {
             return visitorRequestList;
         }
         return null;
@@ -232,6 +221,4 @@ public class UserService {
         List<UserInfo> userInfoList = userRepository.findAllByManagerName(manager);
         return userInfoList;
     }
-
-
 }

@@ -34,7 +34,6 @@ public class UserController {
         throw new LoginException("Employee Id Exist", 400);
     }
 
-
     @PostMapping(value = "/login/{empId}/{password}", produces = MediaType.APPLICATION_JSON_VALUE)
     private ResponseEntity<?> userLogin(@PathVariable String empId, @PathVariable String password) {
         UserInfo users;
@@ -141,10 +140,9 @@ public class UserController {
         return responseEntity;
     }
 
-
-    @GetMapping(value = "manager/registration-request/{empId}",produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "manager/registration-request/{empId}", produces = MediaType.APPLICATION_JSON_VALUE)
     private List<UserInfo> getRegistrationRequestOfEmployee(@PathVariable String empId) {
-        List<UserInfo> registrationRequestOfEmployee = userService.getRegistrationRequestOfEmployee(empId );
+        List<UserInfo> registrationRequestOfEmployee = userService.getRegistrationRequestOfEmployee(empId);
         if (registrationRequestOfEmployee.size() == 0) {
             throw new LoginException("No pending request", 400);
         }
@@ -156,7 +154,6 @@ public class UserController {
         List<UserInfo> usr = userService.managerList();
         return usr;
     }
-
 
     @PostMapping(value = "/registration-request", consumes = MediaType.APPLICATION_JSON_VALUE)
     private ResponseDto acceptOrRejectRequest(@RequestBody RegistrationRequest registrationRequest) {

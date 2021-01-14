@@ -14,6 +14,8 @@ public interface UserRepository extends MongoRepository<UserInfo, Integer> {
 
 	Optional<UserInfo> findByEmpId(String empId);
 
+	List<UserInfo>  findAllByRole(String role);
+
 	@DeleteQuery
 	void deleteByEmpId(String empId);
 
