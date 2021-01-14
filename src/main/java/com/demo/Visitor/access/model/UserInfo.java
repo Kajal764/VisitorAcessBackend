@@ -1,14 +1,9 @@
 package com.demo.Visitor.access.model;
 
 import com.demo.Visitor.access.dto.RegisterUserDto;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.util.List;
-
 
 @Document
 public class UserInfo {
@@ -32,11 +27,23 @@ public class UserInfo {
 
     private boolean accountActive;
 
-    private String odc;
+    private List<String> odc;
 
     private boolean flag;
 
     public UserInfo() {
+    }
+
+    public UserInfo(RegisterUserDto registerUserDto) {
+        this.firstName = registerUserDto.firstName;
+        this.lastName = registerUserDto.lastName;
+        this.email = registerUserDto.email;
+        this.password = registerUserDto.password;
+        this.empId = registerUserDto.empId;
+        this.mobileNo = registerUserDto.mobileNo;
+        this.role = registerUserDto.role;
+        this.managerName = registerUserDto.managerName;
+        this.odc = registerUserDto.odc;
     }
 
     public String getFirstName() {
@@ -111,11 +118,11 @@ public class UserInfo {
         this.accountActive = accountActive;
     }
 
-    public String getOdc() {
+    public List<String> getOdc() {
         return odc;
     }
 
-    public void setOdc(String odc) {
+    public void setOdc(List<String> odc) {
         this.odc = odc;
     }
 
@@ -126,19 +133,6 @@ public class UserInfo {
     public void setFlag(boolean flag) {
         this.flag = flag;
     }
-
-    public UserInfo(RegisterUserDto registerUserDto) {
-        this.firstName = registerUserDto.firstName;
-        this.lastName = registerUserDto.lastName;
-        this.email = registerUserDto.email;
-        this.password = registerUserDto.password;
-        this.empId = registerUserDto.empId;
-        this.mobileNo = registerUserDto.mobileNo;
-        this.role = registerUserDto.role;
-        this.managerName = registerUserDto.managerName;
-        this.odc = registerUserDto.odc;
-    }
-
 
     @Override
     public String toString() {
