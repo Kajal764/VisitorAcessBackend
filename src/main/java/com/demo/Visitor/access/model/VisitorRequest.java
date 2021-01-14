@@ -19,6 +19,7 @@ public class VisitorRequest {
     private String odc;
     private String status;
     private Object managerEmpID;
+    private boolean odcExist=true;
 
     public VisitorRequest() {
     }
@@ -95,6 +96,14 @@ public class VisitorRequest {
         this.managerEmpID = managerEmpID;
     }
 
+    public boolean isOdcExist() {
+        return odcExist;
+    }
+
+    public void setOdcExist(boolean odcExist) {
+        this.odcExist = odcExist;
+    }
+
     @Override
     public String toString() {
         return "VisitorRequest{" +
@@ -107,10 +116,12 @@ public class VisitorRequest {
                 ", odc='" + odc + '\'' +
                 ", status='" + status + '\'' +
                 ", managerEmpID=" + managerEmpID +
+                ", odcExist=" + odcExist +
                 '}';
     }
 
-    public VisitorRequest(int visitorRequestId, String empId, String startDate, String endDate, String startTime, String endTime, String odc, String status, Object managerEmpID) {
+
+    public VisitorRequest(int visitorRequestId, String empId, String startDate, String endDate, String startTime, String endTime, String odc, String status, Object managerEmpID, boolean odcExist) {
         this.visitorRequestId = visitorRequestId;
         this.empId = empId;
         this.startDate = startDate;
@@ -120,5 +131,6 @@ public class VisitorRequest {
         this.odc = odc;
         this.status = status;
         this.managerEmpID = managerEmpID;
+        this.odcExist = odcExist;
     }
 }

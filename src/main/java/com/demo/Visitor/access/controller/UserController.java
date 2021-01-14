@@ -109,15 +109,6 @@ public class UserController {
         return responseEntity;
     }
 
-//    @GetMapping(value = "/getAllOdcManagerRequests/{odcName}", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<?> getOdcManagerRequests(@PathVariable String odcName) throws BusinessException {
-//        ResponseEntity<?> responseEntity = null;
-//        List<VisitorRequest> visitorRequests = userService.findAllAcceptedRequestedByManager(odcName);
-//        if (visitorRequests != null)
-//            responseEntity = new ResponseEntity<>(visitorRequests, HttpStatus.ACCEPTED);
-//        return responseEntity;
-//    }
-
     @GetMapping(value = "/getAllOdcManagerRequests/{empId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getOdcManagerRequests(@PathVariable String empId) throws BusinessException {
         ResponseEntity<?> responseEntity = null;
