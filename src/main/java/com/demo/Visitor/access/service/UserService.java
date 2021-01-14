@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -131,13 +132,28 @@ public class UserService {
             return odcLists;
     }
 
-    public List<VisitorRequest> findAllAcceptedRequestedByManager(String odcName) throws BusinessException {
-        List<VisitorRequest> requests = visitorRequestRepository.findAllByOdcAndStatus(odcName, "Accepted By Manager");
-        if (requests == null)
-            throw new BusinessException("No Request is present");
-        else
-            return requests;
+//    public List<VisitorRequest> findAllAcceptedRequestedByManager(String odcName) throws BusinessException {
+//        List<VisitorRequest> requests = visitorRequestRepository.findAllByOdcAndStatus(odcName, "Accepted By Manager");
+//        if (requests == null)
+//            throw new BusinessException("No Request is present");
+//        else
+//            return requests;
+//    }
+
+    public List<VisitorRequest> findAllAcceptedRequestedByManager(String empId) throws BusinessException {
+        Optional<UserInfo> user = userRepository.findByEmpId(empId);
+        List<VisitorRequest> visitorRequestList = new ArrayList<VisitorRequest>();
+        if (user.isPresent()) {
+            List<String> odcList = user.get().getOdc();
+            odcList.stream().forEach(odc -> {
+                List<VisitorRequest> accepted_by_manager = visitorRequestRepository.findAllByOdcAndStatus(odc, "Accepted By Manager");
+                visitorRequestList.addAll(accepted_by_manager);
+            });
+            return visitorRequestList;
+        }
+        return null;
     }
+
 
     public boolean addOdc(ODCList odc) throws BusinessException {
         Optional<ODCList> odcName = odcRepository.findByOdcName(odc.getOdcName());
@@ -207,9 +223,8 @@ public class UserService {
         return true;
     }
 
-    public List<VisitorRequest> getPendingVisitorRequest(String empId) throws BusinessException {
+    public List<VisitorRequest> getPendingVisitorRequest(String empId) {
         Optional<UserInfo> user = userRepository.findByEmpId(empId);
-        System.out.println(user);
         List<VisitorRequest> visitorRequestList = visitorRequestRepository.findByManagerEmpID(empId);
         if (user.isPresent()) {
             return visitorRequestList;
@@ -217,8 +232,8 @@ public class UserService {
         return null;
     }
 
-    public List<UserInfo> getEmployeesList(String manager) {
-        List<UserInfo> userInfoList = userRepository.findAllByManagerName(manager);
-        return userInfoList;
-    }
+//    public List<UserInfo> getEmployeesList(String manager) {
+//        List<UserInfo> userInfoList = userRepository.findAllByManagerName(manager);
+//        return userInfoList;
+//    }
 }

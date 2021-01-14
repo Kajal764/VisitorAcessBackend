@@ -23,7 +23,7 @@ public class DataSeeder {
         return args -> {
             if (userRepository.findByEmpId("Admin").isEmpty()) {
                 RegisterUserDto adminDTO = new RegisterUserDto("Admin", "", "admin@gmail.com", "Admin@123", "Admin", 9090909090L,
-                        Arrays.asList("Admin", "Manager", "Employee", "Odc-Manager"), "Admin", "");
+                        Arrays.asList("Admin", "Manager", "Employee", "Odc-Manager"), "Admin", Arrays.asList());
                 adminDTO.password = bcryptPasswordEncoder.encode(adminDTO.password);
                 UserInfo userInfo = new UserInfo(adminDTO);
                 userInfo.setFlag(true);
@@ -31,7 +31,7 @@ public class DataSeeder {
                 userRepository.save(userInfo);
             }
             if (userRepository.findByEmpId("7777777").isEmpty()) {
-                RegisterUserDto adminDTO = new RegisterUserDto("Chandrashekhar", "C", "Manager@gmail.com", "Manager@123", "7777777", 9090909090L, Arrays.asList("Manager", "Employee"), "Admin", "");
+                RegisterUserDto adminDTO = new RegisterUserDto("Chandrashekhar", "C", "Manager@gmail.com", "Manager@123", "7777777", 9090909090L, Arrays.asList("Manager", "Employee"), "Admin", Arrays.asList());
                 adminDTO.password = bcryptPasswordEncoder.encode(adminDTO.password);
                 UserInfo userInfo = new UserInfo(adminDTO);
                 userInfo.setFlag(true);
