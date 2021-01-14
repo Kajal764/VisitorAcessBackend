@@ -167,21 +167,45 @@ public class UserService {
             return true;
     }
 
-    public boolean approveOrRejectOdcRequest(VisitorRequest visitorRequest) throws BusinessException {
-        visitorRequestRepository.deleteByVisitorRequestId(visitorRequest.getVisitorRequestId());
-        if (visitorRequest.getStatus().equals("Accepted By Manager"))
-            visitorRequest.setStatus("Accepted By Manager");
-        else if (visitorRequest.getStatus().equals("Approved"))
-            visitorRequest.setStatus("Approved");
-        else if (visitorRequest.getStatus().equals("Rejected By Manager"))
-            visitorRequest.setStatus("Rejected By Manager");
-        else if (visitorRequest.getStatus().equals("Rejected"))
-            visitorRequest.setStatus("Rejected");
-        VisitorRequest success = visitorRequestRepository.save(visitorRequest);
-        if (success == null)
-            throw new BusinessException("Request Cannot be Approved");
-        else
-            return true;
+//    public boolean approveOrRejectOdcRequest(VisitorRequest visitorRequest) throws BusinessException {
+//        visitorRequestRepository.deleteByVisitorRequestId(visitorRequest.getVisitorRequestId());
+//        if (visitorRequest.getStatus().equals("Accepted By Manager"))
+//            visitorRequest.setStatus("Accepted By Manager");
+//        else if (visitorRequest.getStatus().equals("Approved"))
+//            visitorRequest.setStatus("Approved");
+//        else if (visitorRequest.getStatus().equals("Rejected By Manager"))
+//            visitorRequest.setStatus("Rejected By Manager");
+//        else if (visitorRequest.getStatus().equals("Rejected"))
+//            visitorRequest.setStatus("Rejected");
+//        VisitorRequest success = visitorRequestRepository.save(visitorRequest);
+//        if (success == null)
+//            throw new BusinessException("Request Cannot be Approved");
+//        else
+//            return true;
+//    }
+    
+    public boolean approveOrRejectOdcRequest(List<VisitorRequest> visitorRequests) throws BusinessException {
+    	boolean success = false;
+    	for (VisitorRequest request : visitorRequests) {
+    		visitorRequestRepository.deleteByVisitorRequestId(request.getVisitorRequestId());
+            if (request.getStatus().equals("Accepted By Manager"))
+            	request.setStatus("Accepted By Manager");
+            else if (request.getStatus().equals("Pending Approval"))
+            	request.setStatus("Accepted By Manager");
+            else if (request.getStatus().equals("Approved"))
+            	request.setStatus("Approved");
+            else if (request.getStatus().equals("Rejected By Manager"))
+            	request.setStatus("Rejected By Manager");
+            else if (request.getStatus().equals("Rejected"))
+            	request.setStatus("Rejected");
+            VisitorRequest vr = visitorRequestRepository.save(request);
+            if (vr == null)
+            	{success = false;
+                throw new BusinessException("Request Cannot be Approved");}
+            else
+                success =true;
+		}
+        return success;
     }
 
     public List<UserInfo> getManagerList() {
