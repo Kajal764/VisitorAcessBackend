@@ -40,8 +40,8 @@ public class UserService {
         Optional<UserInfo> user = userRepository.findByEmpId(registerUserDto.empId);
         if (user.isPresent())
             return false;
-        if (userInfo.getRole().contains("Odc-Manager") && userInfo.getRole().contains("Employee"))
-            userInfo.setManagerName("Admin ");
+        if (userInfo.getRole().equals("odcManager"))
+            userInfo.setManagerName("admin admin");
         userInfo.setAccountActive(false);
         userInfo.setFlag(true);
         userRepository.save(userInfo);
@@ -168,6 +168,12 @@ public class UserService {
             return true;
     }
 
+    public List<UserInfo> getManagerList() {
+        List<UserInfo> userInfoList = userRepository.findAll();
+        userInfoList.removeIf(user -> user.getRole().equals("Employee"));
+        userInfoList.removeIf(user -> user.isAccountActive() == true);
+        return userInfoList;
+    }
 
     public ResponseDto registrationRequest(RegistrationRequest registrationRequest) {
         Optional<UserInfo> userInfo = userRepository.findByEmpId(registrationRequest.empId);
@@ -183,7 +189,7 @@ public class UserService {
 
     public List<UserInfo> getRegistrationRequestOfEmployee(String empId) {
         Optional<UserInfo> manager = userRepository.findByEmpId(empId);
-        if (manager.isPresent()) {
+        if(manager.isPresent()){
             String name = manager.get().getFirstName() + " " + manager.get().getLastName();
             List<UserInfo> userInfoList = userRepository.findAllByManagerName(name);
             userInfoList.removeIf(value -> value.isAccountActive() == true);
@@ -193,10 +199,9 @@ public class UserService {
     }
 
     public List<UserInfo> managerList() {
-        List<UserInfo> manager = userRepository.findAllByRole("Manager");
-        manager.removeIf(user -> user.getRole().contains("Admin"));
-        manager.removeIf(userInfo -> userInfo.isAccountActive() == false);
-        return manager;
+        List<UserInfo> userList = userRepository.findAll();
+        userList.removeIf((value -> (value.getRole().equals("Employee") | value.getRole().equals("Admin") | value.getRole().equals("odcManager"))));
+        return userList;
     }
 
     public boolean deleteOdc(String odcName) {
@@ -221,4 +226,6 @@ public class UserService {
         List<UserInfo> userInfoList = userRepository.findAllByManagerName(manager);
         return userInfoList;
     }
+
+
 }

@@ -121,4 +121,6 @@ public class VisitorRequest {
         this.status = status;
         this.managerEmpID = managerEmpID;
     }
+
+	
 }
