@@ -109,15 +109,6 @@ public class UserController {
         return responseEntity;
     }
 
-//    @GetMapping(value = "/getAllOdcManagerRequests/{odcName}", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<?> getOdcManagerRequests(@PathVariable String odcName) throws BusinessException {
-//        ResponseEntity<?> responseEntity = null;
-//        List<VisitorRequest> visitorRequests = userService.findAllAcceptedRequestedByManager(odcName);
-//        if (visitorRequests != null)
-//            responseEntity = new ResponseEntity<>(visitorRequests, HttpStatus.ACCEPTED);
-//        return responseEntity;
-//    }
-
     @GetMapping(value = "/getAllOdcManagerRequests/{empId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getOdcManagerRequests(@PathVariable String empId) throws BusinessException {
         ResponseEntity<?> responseEntity = null;
@@ -165,7 +156,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/registration-request", consumes = MediaType.APPLICATION_JSON_VALUE)
-    private ResponseDto acceptOrRejectRequest(@RequestBody RegistrationRequest registrationRequest) {
+    private ResponseDto acceptOrRejectRequest(@RequestBody List<RegistrationRequest> registrationRequest) {
         return userService.registrationRequest(registrationRequest);
     }
 
@@ -187,12 +178,4 @@ public class UserController {
         return new ResponseDto("ODC deleted from the list", 200);
     }
 
-//    @GetMapping(value = "/searchEmployees/{employeeName}", produces = MediaType.APPLICATION_JSON_VALUE)
-//    private List<UserInfo> getEmployeesUnderManager(@PathVariable String employeeName) {
-//        List<UserInfo> employeelist = userService.getEmployeesList(employeeName);
-//        if (employeelist.size() == 0) {
-//            throw new LoginException("No Employees available", 400);
-//        }
-//        return employeelist;
-//    }
 }
