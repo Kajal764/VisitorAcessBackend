@@ -22,7 +22,7 @@ public class SwaggerConfiguration {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.demo.Visitor.access"))
-                .paths(regex("/user.*"))
+                .paths(regex("/visitor.*"))
                 .build()
                 .apiInfo(metaData());
     }

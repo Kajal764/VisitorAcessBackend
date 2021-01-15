@@ -19,7 +19,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("user")
+@RequestMapping("visitor/user")
 @CrossOrigin("*")
 public class UserController {
 
