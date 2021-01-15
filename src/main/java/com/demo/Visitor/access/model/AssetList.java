@@ -16,13 +16,14 @@ public class AssetList {
 	private String odcName;
 	private String reason;
 	private boolean flag;
-
+	private String status;
+	
 	public AssetList() {
 		
 	}
 
 	public AssetList(String serialNumber, String name, String type, String empId, String dateAndTime, String odcName,
-			String reason, boolean flag) {
+			String reason, boolean flag, String status) {
 		super();
 		this.serialNumber = serialNumber;
 		this.name = name;
@@ -32,9 +33,8 @@ public class AssetList {
 		this.odcName = odcName;
 		this.reason = reason;
 		this.flag = flag;
+		this.status = status;
 	}
-
-
 
 	public String getSerialNumber() {
 		return serialNumber;
@@ -99,12 +99,20 @@ public class AssetList {
 	public void setFlag(boolean flag) {
 		this.flag = flag;
 	}
+	
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
 	@Override
 	public String toString() {
 		return "AssetList [serialNumber=" + serialNumber + ", name=" + name + ", type=" + type + ", empId=" + empId
 				+ ", dateAndTime=" + dateAndTime + ", odcName=" + odcName + ", reason=" + reason + ", flag=" + flag
-				+ "]";
+				+ ", status=" + status + "]";
 	}
 	
 }
