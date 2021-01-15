@@ -128,7 +128,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/approveOrRejectAccess", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> approveAccess(@RequestBody List<VisitorRequest> visitorRequest) throws BusinessException {
+    public ResponseEntity<?> approveAccess(@RequestBody List<VisitorRequest> visitorRequest) {
         ResponseEntity<?> responseEntity = null;
         try {
             boolean success = userService.approveOrRejectOdcRequest(visitorRequest);
