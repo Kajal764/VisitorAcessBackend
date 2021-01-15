@@ -5,9 +5,11 @@ import com.demo.Visitor.access.dto.RegistrationRequest;
 import com.demo.Visitor.access.dto.ResponseDto;
 import com.demo.Visitor.access.exception.BusinessException;
 import com.demo.Visitor.access.exception.LoginException;
+import com.demo.Visitor.access.model.Assets;
 import com.demo.Visitor.access.model.ODCList;
 import com.demo.Visitor.access.model.UserInfo;
 import com.demo.Visitor.access.model.VisitorRequest;
+import com.demo.Visitor.access.service.AssetsService;
 import com.demo.Visitor.access.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +27,9 @@ public class UserController {
 
     @Autowired
     UserService userService;
+    
+    @Autowired
+	AssetsService assestsService;
 
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     private ResponseDto register(@Valid @RequestBody RegisterUserDto registerUserDto) throws LoginException {
@@ -176,6 +181,20 @@ public class UserController {
     private ResponseDto deleteOdcById(@PathVariable String odcName) {
         userService.deleteOdc(odcName);
         return new ResponseDto("ODC deleted from the list", 200);
+    }
+    
+   
+	
+    @PostMapping(value = "/addAssets", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> addODC(@RequestBody Assets assets) throws BusinessException {
+        ResponseEntity<?> responseEntity = null;
+        try {
+            boolean success = assestsService.addAssets(assets);
+            responseEntity = new ResponseEntity<>(success, HttpStatus.CREATED);
+        } catch (BusinessException e) {
+            responseEntity = new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+        }
+        return responseEntity;
     }
 
 }
