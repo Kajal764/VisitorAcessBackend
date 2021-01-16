@@ -1,5 +1,7 @@
 package com.demo.Visitor.access.model;
 
+import java.time.LocalDateTime;
+
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -17,13 +19,13 @@ public class AssetList {
 	private String reason;
 	private boolean flag;
 	private String status;
-	
+	private String dateOfApproval;
 	public AssetList() {
 		
 	}
 
 	public AssetList(String serialNumber, String name, String type, String empId, String dateAndTime, String odcName,
-			String reason, boolean flag, String status) {
+			String reason, boolean flag, String status, String dateOfApproval) {
 		super();
 		this.serialNumber = serialNumber;
 		this.name = name;
@@ -34,6 +36,7 @@ public class AssetList {
 		this.reason = reason;
 		this.flag = flag;
 		this.status = status;
+		this.dateOfApproval = dateOfApproval;
 	}
 
 	public String getSerialNumber() {
@@ -108,11 +111,20 @@ public class AssetList {
 		this.status = status;
 	}
 
+	public String getDateOfApproval() {
+		return dateOfApproval;
+	}
+
+	public void setDateOfApproval(String dateOfApproval) {
+		this.dateOfApproval = dateOfApproval;
+	}
+
 	@Override
 	public String toString() {
 		return "AssetList [serialNumber=" + serialNumber + ", name=" + name + ", type=" + type + ", empId=" + empId
 				+ ", dateAndTime=" + dateAndTime + ", odcName=" + odcName + ", reason=" + reason + ", flag=" + flag
-				+ ", status=" + status + "]";
+				+ ", status=" + status + ", dateOfApproval=" + dateOfApproval + "]";
 	}
+
 	
 }

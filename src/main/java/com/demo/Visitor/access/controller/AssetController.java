@@ -52,11 +52,11 @@ public class AssetController {
 	        return responseEntity;
 	    }
 
-	 @GetMapping(value = "/pendingAssetRequest/{odcName}/{role}", produces = MediaType.APPLICATION_JSON_VALUE)
-	    public ResponseEntity<?> getAssetRequest(@PathVariable String odcName,@PathVariable String role)  {
+	 @GetMapping(value = "/pendingAssetRequest", produces = MediaType.APPLICATION_JSON_VALUE)
+	    public ResponseEntity<?> getAssetRequest()  {
 	        ResponseEntity<?> responseEntity = null;
 	        try {
-	        List<AssetList> assetLists = assetService.getAssetRequests(odcName, role);
+	        List<AssetList> assetLists = assetService.getAssetRequests();
 	        if (assetLists != null)
 	            responseEntity = new ResponseEntity<>(assetLists, HttpStatus.ACCEPTED);
 	        } catch (BusinessException e) {

@@ -1,5 +1,7 @@
 package com.demo.Visitor.access.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,13 +30,15 @@ public class AssetService {
 			return true;
 	}
 
-	public List<AssetList> getAssetRequests(String role, String odcName) throws BusinessException {
+	public List<AssetList> getAssetRequests() throws BusinessException {
 		List<AssetList> assetList = null;
-		if (role == "odcManager") {
-			assetList = assetRepository.findByStatus("Pending Approval");
-			assetList.removeIf(odc -> odc.getName() != odcName);
-		} else
-			assetList = assetRepository.findByStatus("Pending Approval");
+//		if (role == "odcManager") {
+//			assetList = assetRepository.findByStatus("Pending Approval");
+//			assetList.removeIf(odc -> odc.getOdcName() != odcName);
+//		} else
+//		{
+//			assetList = assetRepository.findByStatus("Pending Approval");}
+		assetList = assetRepository.findByStatus("Pending Approval");
 		if (assetList == null)
 			throw new BusinessException("No Asset request raised");
 		else
@@ -45,6 +49,10 @@ public class AssetService {
 		boolean success = false;
 		for (AssetList asset : assetList) {
 			assetRepository.deleteBySerialNumber(asset.getSerialNumber());
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
+			LocalDateTime now = LocalDateTime.now();
+			asset.setDateOfApproval(now.format(dtf));
+			System.out.println(now.format(dtf));
 			AssetList assetSave = assetRepository.save(asset);
 			if (assetSave == null)
 				throw new BusinessException("Request Cannot be processed");
