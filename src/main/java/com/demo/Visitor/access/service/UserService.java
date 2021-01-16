@@ -270,6 +270,8 @@ public class UserService {
         List<VisitorRequest> visitorRequestList = visitorRequestRepository.findByManagerEmpID(empId);
         if (user.isPresent()) {
             visitorRequestList.removeIf(value -> value.isOdcExist() == false);
+            visitorRequestList.removeIf(value->value.getStatus().equals("Approved"));
+            visitorRequestList.removeIf(value->value.getStatus().equals("Rejected"));
             return visitorRequestList;
         }
         return null;
@@ -280,10 +282,5 @@ public class UserService {
         return userInfoList;
     }
 
-
-//    public List<UserInfo> getEmployeesList(String manager) {
-//        List<UserInfo> userInfoList = userRepository.findAllByManagerName(manager);
-//        return userInfoList;
-//    }
 
 }
