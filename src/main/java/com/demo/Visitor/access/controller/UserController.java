@@ -21,7 +21,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("user")
+@RequestMapping("visitor/user")
 @CrossOrigin("*")
 public class UserController {
 
@@ -133,7 +133,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/approveOrRejectAccess", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> approveAccess(@RequestBody List<VisitorRequest> visitorRequest) throws BusinessException {
+    public ResponseEntity<?> approveAccess(@RequestBody List<VisitorRequest> visitorRequest) {
         ResponseEntity<?> responseEntity = null;
         try {
             boolean success = userService.approveOrRejectOdcRequest(visitorRequest);

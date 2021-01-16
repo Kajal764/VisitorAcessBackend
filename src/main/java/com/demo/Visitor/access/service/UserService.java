@@ -42,8 +42,8 @@ public class UserService {
         Optional<UserInfo> user = userRepository.findByEmpId(registerUserDto.empId);
         if (user.isPresent())
             return false;
-        if (userInfo.getRole().equals("odcManager"))
-            userInfo.setManagerName("admin admin");
+        if (userInfo.getRole().contains("Odc-Manager"))
+            userInfo.setManagerName("Admin ");
         userInfo.setAccountActive(false);
         userInfo.setFlag(true);
         userRepository.save(userInfo);
@@ -71,7 +71,7 @@ public class UserService {
         List<UserInfo> userList = userRepository.findAll();
         userList.removeIf(user -> user.isFlag() == false);
         userList.removeIf(userInfo -> userInfo.isAccountActive() == false);
-        userList.removeIf(value -> value.getRole().equals("Admin"));
+        userList.removeIf(value -> value.getRole().contains("Admin"));
         return userList;
     }
 
@@ -85,16 +85,9 @@ public class UserService {
     public boolean insertIntoVisitorRequest(VisitorRequest visitorRequest) throws BusinessException {
         Optional<UserInfo> user = userRepository.findByEmpId(visitorRequest.getEmpId());
         int random_id;
-//        if (visitorRequest.getEmployee() == 0) {
-//            visitorRequest.setManagerEmpID("Admin");
-//        }else if (visitorRequest.getEmployee() == 2) {
-//            visitorRequest.setManagerEmpID("7777777");
-//        }
-//        else {
         String[] name = user.get().getManagerName().split(" ");
         Optional<UserInfo> manager = userRepository.findByFirstName(name[0]);
         visitorRequest.setManagerEmpID(manager.get().getEmpId());
-//        }
         Random random = new Random();
         random_id = random.nextInt();
         Optional<VisitorRequest> byVisitorRequestId = visitorRequestRepository.findByVisitorRequestId(random_id);
@@ -153,7 +146,7 @@ public class UserService {
         Optional<ODCList> odcName = odcRepository.findByOdcName(odc.getOdcName());
         if (odcName.isPresent() && odcName.get().getFlag() == true)
             throw new LoginException("Odc Already Exist", 400);
-        if(odcName.get().getFlag()==false && odcName.isPresent()){
+        if (odcName.get().getFlag() == false && odcName.isPresent()) {
             odcRepository.deleteByOdcName(odcName.get().getOdcName());
         }
         odc.setFlag(true);
@@ -186,37 +179,31 @@ public class UserService {
 //        else
 //            return true;
 //    }
-    
+
     public boolean approveOrRejectOdcRequest(List<VisitorRequest> visitorRequests) throws BusinessException {
-    	boolean success = false;
-    	for (VisitorRequest request : visitorRequests) {
-    		visitorRequestRepository.deleteByVisitorRequestId(request.getVisitorRequestId());
+        boolean success = false;
+        for (VisitorRequest request : visitorRequests) {
+            visitorRequestRepository.deleteByVisitorRequestId(request.getVisitorRequestId());
             if (request.getStatus().equals("Accepted By Manager"))
-            	request.setStatus("Accepted By Manager");
+                request.setStatus("Accepted By Manager");
             else if (request.getStatus().equals("Pending Approval"))
-            	request.setStatus("Accepted By Manager");
+                request.setStatus("Accepted By Manager");
             else if (request.getStatus().equals("Approved"))
-            	request.setStatus("Approved");
+                request.setStatus("Approved");
             else if (request.getStatus().equals("Rejected By Manager"))
-            	request.setStatus("Rejected By Manager");
+                request.setStatus("Rejected By Manager");
             else if (request.getStatus().equals("Rejected"))
-            	request.setStatus("Rejected");
+                request.setStatus("Rejected");
             VisitorRequest vr = visitorRequestRepository.save(request);
-            if (vr == null)
-            	{success = false;
-                throw new BusinessException("Request Cannot be Approved");}
-            else
-                success =true;
-		}
+            if (vr == null) {
+                success = false;
+                throw new BusinessException("Request Cannot be Approved");
+            } else
+                success = true;
+        }
         return success;
     }
 
-    public List<UserInfo> getManagerList() {
-        List<UserInfo> userInfoList = userRepository.findAll();
-        userInfoList.removeIf(user -> user.getRole().equals("Employee"));
-        userInfoList.removeIf(user -> user.isAccountActive() == true);
-        return userInfoList;
-    }
 
     public ResponseDto registrationRequest(List<RegistrationRequest> registrationRequest) {
         int count = 0;
@@ -235,13 +222,13 @@ public class UserService {
             }
         }
         if (count == registrationRequest.size())
-            return new ResponseDto("All request accepted", 200);
-        return new ResponseDto("Some request rejected", 200);
+            return new ResponseDto("All request approved !!!", 200);
+        return new ResponseDto("Some request rejected !!!", 200);
     }
 
     public List<UserInfo> getRegistrationRequestOfEmployee(String empId) {
         Optional<UserInfo> manager = userRepository.findByEmpId(empId);
-        if(manager.isPresent()){
+        if (manager.isPresent()) {
             String name = manager.get().getFirstName() + " " + manager.get().getLastName();
             List<UserInfo> userInfoList = userRepository.findAllByManagerName(name);
             userInfoList.removeIf(value -> value.isAccountActive() == true);
@@ -271,11 +258,11 @@ public class UserService {
             visitorRequestRepository.save(value);
         });
         List<UserInfo> userInfos = userRepository.findAllByOdc(odcName);
-        userInfos.forEach(userInfo ->{
+        userInfos.forEach(userInfo -> {
             userInfo.getOdc().remove(odcName);
             userRepository.deleteByEmpId(userInfo.getEmpId());
             userRepository.save(userInfo);
-        } );
+        });
         return true;
     }
 
