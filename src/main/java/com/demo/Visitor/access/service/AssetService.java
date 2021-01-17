@@ -78,7 +78,7 @@ public class AssetService {
 
 	public List<AssetRequests> getAssetRequestsForMovement(String role, String odcName) throws BusinessException {
 		List<AssetRequests> assetRequests = null;
-		if (role == "odcManager") {
+		if (role == "odc-Manager") {
 			assetRequests = assetRequestRepository.findByStatus("Pending Approval");
 			assetRequests.removeIf(odc -> odc.getName() != odcName);
 		} else
@@ -100,7 +100,7 @@ public class AssetService {
 
 	public List<AssetList> getAssetRequestsToAdd(String role, String odcName) throws BusinessException {
 			List<AssetList> assetList = null;
-			if (role == "odcManager") {
+			if (role == "odc-Manager") {
 				assetList = assetRepository.findByStatus("Pending Approval");
 				assetList.removeIf(odc -> odc.getName() != odcName);
 			} else
