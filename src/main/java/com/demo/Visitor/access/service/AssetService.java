@@ -1,18 +1,16 @@
 package com.demo.Visitor.access.service;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Optional;
-
+import com.demo.Visitor.access.dto.AssetDto;
+import com.demo.Visitor.access.exception.BusinessException;
+import com.demo.Visitor.access.model.AssetData;
+import com.demo.Visitor.access.repository.AssetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.demo.Visitor.access.exception.BusinessException;
-import com.demo.Visitor.access.model.AssetList;
-import com.demo.Visitor.access.model.AssetRequests;
-import com.demo.Visitor.access.repository.AssetRepository;
-import com.demo.Visitor.access.repository.AssetRequestRepository;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class AssetService {
@@ -20,105 +18,51 @@ public class AssetService {
     @Autowired
     AssetRepository assetRepository;
 
-    @Autowired
-    AssetRequestRepository assetRequestRepository;
-
-    public boolean addAsset(AssetList asset) throws BusinessException {
-        Optional<AssetList> serialNumber = assetRepository.findBySerialNumber(asset.getSerialNumber());
-        if (serialNumber.isPresent())
-            throw new BusinessException("An Asset already exists with this serial number");
-        asset.setFlag(true);
-        AssetList assetAdded = assetRepository.save(asset);
-        if (assetAdded == null)
-            throw new BusinessException("Something went wrong!!!Please try again");
-        else
-            return true;
+    public List<String> addAsset(AssetDto assetDto) throws BusinessException {
+        List<String> addedAssets = new ArrayList<>();
+        assetDto.assetInfos.forEach(value -> {
+            Optional<AssetData> asset = assetRepository.findBySerialNumberAndOdcName(value.serialNumber, assetDto.odcName);
+            if (asset.isEmpty()) {
+                AssetData assetData = new AssetData(assetDto);
+                assetData.setSerialNumber(value.serialNumber);
+                assetData.setName(value.name);
+                Random random = new Random();
+                int random_id;
+                Optional<AssetData> requests;
+                do {
+                    random_id = random.nextInt();
+                    requests = assetRepository.findByRequestId(random_id);
+                } while (requests.isPresent());
+                assetData.setRequestId(random_id);
+                assetData.setStatus("Pending Approval");
+                if (assetDto.reason.equals("newAsset")) {
+                    assetData.setAssetCondition("Working");
+                } else {
+                    assetData.setAssetCondition(assetDto.reason);
+                }
+                Optional<AssetData> exist = assetRepository.findBySerialNumber(value.serialNumber);
+                if(exist.isPresent()){
+                    assetRepository.deleteBySerialNumber(exist.get().getSerialNumber());
+                    exist.get().setCurrentOdc(false);
+                    assetRepository.save(exist.get());
+                }
+                assetData.setCurrentOdc(true);
+                AssetData assetAdded = assetRepository.save(assetData);
+                addedAssets.add(value.serialNumber);
+                if (assetAdded == null) {
+                    try {
+                        throw new BusinessException("Something went wrong!!!Please try again");
+                    } catch (BusinessException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        if (addedAssets.size() == 0)
+            throw new BusinessException("Asset not added!!!Please try again");
+        return addedAssets;
     }
-
-    public List<AssetList> getAssetRequests() throws BusinessException {
-        List<AssetList> assetList = null;
-//		if (role == "odcManager") {
-//			assetList = assetRepository.findByStatus("Pending Approval");
-//			assetList.removeIf(odc -> odc.getOdcName() != odcName);
-//		} else
-//		{
-//			assetList = assetRepository.findByStatus("Pending Approval");}
-        assetList = assetRepository.findByStatus("Pending Approval");
-        if (assetList == null)
-            throw new BusinessException("No Asset request raised");
-        else
-            return assetList;
-    }
-
-    public boolean approveAndRejectAssetRequest(List<AssetList> assetList) throws BusinessException {
-        boolean success = false;
-        for (AssetList asset : assetList) {
-            assetRepository.deleteBySerialNumber(asset.getSerialNumber());
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-            LocalDateTime now = LocalDateTime.now();
-            asset.setDateOfApproval(now.format(dtf));
-            System.out.println(now.format(dtf));
-            AssetList assetSave = assetRepository.save(asset);
-            if (assetSave == null)
-                throw new BusinessException("Request Cannot be processed");
-            else
-                success = true;
-        }
-        return success;
-    }
-
-    public boolean addAssetRequest(AssetRequests asset) throws BusinessException {
-        asset.setFlag(true);
-        AssetRequests assetAdded = assetRequestRepository.save(asset);
-        if (assetAdded == null)
-            throw new BusinessException("Something went wrong!!!Please try again");
-        else
-            return true;
-    }
-
-    public List<AssetRequests> getAssetRequestsForMovement(String role, String odcName) throws BusinessException {
-        List<AssetRequests> assetRequests = null;
-        if (role == "Odc-Manager") {
-            assetRequests = assetRequestRepository.findByStatus("Pending Approval");
-            assetRequests.removeIf(odc -> odc.getName() != odcName);
-        } else
-            assetRequests = assetRequestRepository.findByStatus("Pending Approval");
-        if (assetRequests == null)
-            throw new BusinessException("No Asset request raised");
-        else
-            return assetRequests;
-    }
-
-    public boolean approveAndRejectRequestsForMovement(List<AssetRequests> assetRequest) throws BusinessException {
-        boolean success = false;
-        for (AssetRequests asset : assetRequest) {
-            assetRequestRepository.deleteByRequestId(asset.getRequestId());
-            asset.setStatus("Approved");
-            assetRequestRepository.save(asset);
-            success = true;
-        }
-        return success;
-    }
-
-    public List<AssetList> getAssetRequestsToAdd(String role, String odcName) throws BusinessException {
-        List<AssetList> assetList = null;
-        if (role == "Odc-Manager") {
-            assetList = assetRepository.findByStatus("Pending Approval");
-            assetList.removeIf(odc -> odc.getName() != odcName);
-        } else
-            assetList = assetRepository.findByStatus("Pending Approval");
-        if (assetList == null)
-            throw new BusinessException("No Asset request raised");
-        else
-            return assetList;
-    }
-
-    public List<AssetRequests> getAllMovements(String serialNumber) throws BusinessException {
-        List<AssetRequests> assetRequests = assetRequestRepository.findBySerialNumber(serialNumber);
-        if (assetRequests == null)
-            throw new BusinessException("No information available regarding the asset");
-        else
-            return assetRequests;
-    }
-
 }
+
+
+

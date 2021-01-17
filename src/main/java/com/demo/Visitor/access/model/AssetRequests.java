@@ -1,129 +1,131 @@
-package com.demo.Visitor.access.model;
-
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document
-public class AssetRequests {
-	
-	@Indexed(unique=true)
-	private String requestId;
-	private String serialNumber;
-	private String name;
-	private String type;
-	@Indexed(unique=true)
-	private String empId;
-	private String dateAndTime;
-	private String odcName;
-	private String reason;
-	private boolean flag;
-	private String status;
-	
-	public AssetRequests() {
-		
-	}
-
-	public AssetRequests(String requestId, String serialNumber, String name, String type, String empId,
-			String dateAndTime, String odcName, String reason, boolean flag, String status) {
-		super();
-		this.requestId = requestId;
-		this.serialNumber = serialNumber;
-		this.name = name;
-		this.type = type;
-		this.empId = empId;
-		this.dateAndTime = dateAndTime;
-		this.odcName = odcName;
-		this.reason = reason;
-		this.flag = flag;
-		this.status = status;
-	}
-
-	public String getRequestId() {
-		return requestId;
-	}
-
-	public void setRequestId(String requestId) {
-		this.requestId = requestId;
-	}
-
-	public String getSerialNumber() {
-		return serialNumber;
-	}
-
-	public void setSerialNumber(String serialNumber) {
-		this.serialNumber = serialNumber;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public String getEmpId() {
-		return empId;
-	}
-
-	public void setEmpId(String empId) {
-		this.empId = empId;
-	}
-
-	public String getDateAndTime() {
-		return dateAndTime;
-	}
-
-	public void setDateAndTime(String dateAndTime) {
-		this.dateAndTime = dateAndTime;
-	}
-
-	public String getOdcName() {
-		return odcName;
-	}
-
-	public void setOdcName(String odcName) {
-		this.odcName = odcName;
-	}
-
-	public String getReason() {
-		return reason;
-	}
-
-	public void setReason(String reason) {
-		this.reason = reason;
-	}
-
-	public boolean isFlag() {
-		return flag;
-	}
-
-	public void setFlag(boolean flag) {
-		this.flag = flag;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	@Override
-	public String toString() {
-		return "AssetRequests [requestId=" + requestId + ", serialNumber=" + serialNumber + ", name=" + name + ", type="
-				+ type + ", empId=" + empId + ", dateAndTime=" + dateAndTime + ", odcName=" + odcName + ", reason="
-				+ reason + ", flag=" + flag + ", status=" + status + "]";
-	}
-
-
-}
+//package com.demo.Visitor.access.model;
+//
+//import com.demo.Visitor.access.dto.AssetDto;
+//import org.springframework.data.mongodb.core.index.Indexed;
+//import org.springframework.data.mongodb.core.mapping.Document;
+//
+//import java.time.LocalDateTime;
+//
+//@Document
+//public class AssetRequests {
+//
+//    @Indexed(unique = true)
+//    private int requestId;
+//    private String serialNumber;
+//    private String name;
+//    private String type;
+//    private String empId;
+//    private String odcName;
+//    private String reason;
+//    private String assetCondition;
+//    private LocalDateTime dateOfApproval;
+//    private String status;
+//
+//    public AssetRequests() {
+//    }
+//
+//    public AssetRequests(AssetDto assetDto) {
+//        this.serialNumber = assetDto.serialNumber;
+//        this.name = assetDto.name;
+//        this.type = assetDto.type;
+//        this.empId = assetDto.empId;
+//        this.odcName = assetDto.odcName;
+//        this.reason = assetDto.reason;
+//    }
+//
+//    public int getRequestId() {
+//        return requestId;
+//    }
+//
+//    public void setRequestId(int requestId) {
+//        this.requestId = requestId;
+//    }
+//
+//    public String getSerialNumber() {
+//        return serialNumber;
+//    }
+//
+//    public void setSerialNumber(String serialNumber) {
+//        this.serialNumber = serialNumber;
+//    }
+//
+//    public String getName() {
+//        return name;
+//    }
+//
+//    public void setName(String name) {
+//        this.name = name;
+//    }
+//
+//    public String getType() {
+//        return type;
+//    }
+//
+//    public void setType(String type) {
+//        this.type = type;
+//    }
+//
+//    public String getEmpId() {
+//        return empId;
+//    }
+//
+//    public void setEmpId(String empId) {
+//        this.empId = empId;
+//    }
+//
+//    public String getOdcName() {
+//        return odcName;
+//    }
+//
+//    public void setOdcName(String odcName) {
+//        this.odcName = odcName;
+//    }
+//
+//    public String getReason() {
+//        return reason;
+//    }
+//
+//    public void setReason(String reason) {
+//        this.reason = reason;
+//    }
+//
+//    public String getAssetCondition() {
+//        return assetCondition;
+//    }
+//
+//    public void setAssetCondition(String assetCondition) {
+//        this.assetCondition = assetCondition;
+//    }
+//
+//    public LocalDateTime getDateOfApproval() {
+//        return dateOfApproval;
+//    }
+//
+//    public void setDateOfApproval(LocalDateTime dateOfApproval) {
+//        this.dateOfApproval = dateOfApproval;
+//    }
+//
+//    public String getStatus() {
+//        return status;
+//    }
+//
+//    public void setStatus(String status) {
+//        this.status = status;
+//    }
+//
+//    @Override
+//    public String toString() {
+//        return "AssetRequests{" +
+//                "requestId='" + requestId + '\'' +
+//                ", serialNumber='" + serialNumber + '\'' +
+//                ", name='" + name + '\'' +
+//                ", type='" + type + '\'' +
+//                ", empId='" + empId + '\'' +
+//                ", odcName='" + odcName + '\'' +
+//                ", reason='" + reason + '\'' +
+//                ", assetCondition='" + assetCondition + '\'' +
+//                ", dateOfApproval=" + dateOfApproval +
+//                ", status='" + status + '\'' +
+//                '}';
+//    }
+//}
