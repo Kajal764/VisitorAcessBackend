@@ -6,26 +6,25 @@ import org.springframework.data.mongodb.repository.DeleteQuery;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface AssetRepository extends MongoRepository<AssetData, String> {
 
-    Optional<AssetData> findBySerialNumber(String name);
+    List<AssetData> findAllBySerialNumber(String name);
+
+    Optional<AssetData> findBySerialNumber(String no);
 
     Optional<AssetData> findBySerialNumberAndOdcName(String no, String odc);
-
-//    Optional<AssetData> findByAssetInfosAndOdcName(AssetInfo info, String odc);
 
     Optional<AssetData> findByRequestId(int id);
 
     @DeleteQuery
-	void deleteBySerialNumber(String string);
+    void deleteByRequestId(int requestId);
 
-//    List<AssetData> findByOdcNameAndStatus(String odcName, String status);
-//
-//    List<AssetData> findByStatus(String status);
-//
-//    public void deleteBySerialNumber(String serialNumber);
+    List<AssetData> findAllByOdcName(String odcName);
+
+    List<AssetData> findAllByStatus(String status);
 
 }

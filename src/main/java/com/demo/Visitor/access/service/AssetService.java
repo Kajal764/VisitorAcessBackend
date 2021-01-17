@@ -3,10 +3,13 @@ package com.demo.Visitor.access.service;
 import com.demo.Visitor.access.dto.AssetDto;
 import com.demo.Visitor.access.exception.BusinessException;
 import com.demo.Visitor.access.model.AssetData;
+import com.demo.Visitor.access.model.UserInfo;
 import com.demo.Visitor.access.repository.AssetRepository;
+import com.demo.Visitor.access.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +20,9 @@ public class AssetService {
 
     @Autowired
     AssetRepository assetRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     public List<String> addAsset(AssetDto assetDto) throws BusinessException {
         List<String> addedAssets = new ArrayList<>();
@@ -41,8 +47,8 @@ public class AssetService {
                     assetData.setAssetCondition(assetDto.reason);
                 }
                 Optional<AssetData> exist = assetRepository.findBySerialNumber(value.serialNumber);
-                if(exist.isPresent()){
-                    assetRepository.deleteBySerialNumber(exist.get().getSerialNumber());
+                if (exist.isPresent()) {
+                    assetRepository.deleteByRequestId(exist.get().getRequestId());
                     exist.get().setCurrentOdc(false);
                     assetRepository.save(exist.get());
                 }
@@ -61,6 +67,58 @@ public class AssetService {
         if (addedAssets.size() == 0)
             throw new BusinessException("Asset not added!!!Please try again");
         return addedAssets;
+    }
+
+    public List<AssetData> getAssetList(String empId) throws BusinessException {
+        Optional<UserInfo> userInfo = userRepository.findByEmpId(empId);
+        List<AssetData> assetDataList = new ArrayList<>();
+        if (userInfo.isPresent()) {
+            List<String> odc = userInfo.get().getOdc();
+            odc.forEach(odcName -> assetDataList.addAll(assetRepository.findAllByOdcName(odcName)));
+            assetDataList.removeIf(value -> value.isCurrentOdc() == false);
+            if (assetDataList.size() == 0) {
+                throw new BusinessException("Assets Not Added !!!");
+            }
+            return assetDataList;
+        }
+        throw new BusinessException("User Not Present !!!");
+    }
+
+    public List<AssetData> getAssetRequests(String empId) throws BusinessException {
+        Optional<UserInfo> userInfo = userRepository.findByEmpId(empId);
+        List<AssetData> assetDataList = new ArrayList<>();
+        if (userInfo.isPresent()) {
+            List<String> odc = userInfo.get().getOdc();
+            odc.forEach(odcName -> assetDataList.addAll(assetRepository.findAllByOdcName(odcName)));
+            assetDataList.removeIf(data -> data.isCurrentOdc() == false);
+            assetDataList.removeIf(data -> !data.getStatus().equals("Pending Approval"));
+            if (assetDataList.size() == 0)
+                throw new BusinessException("No Pending Request !!!");
+            return assetDataList;
+        }
+        throw new BusinessException("User Not Present !!!");
+    }
+
+    public boolean approveAndRejectAssetRequest(List<AssetData> assetList) throws BusinessException {
+        boolean success = false;
+        for (AssetData asset : assetList) {
+            assetRepository.deleteByRequestId(asset.getRequestId());
+            asset.setDateOfApproval(LocalDateTime.now());
+            AssetData assetSave = assetRepository.save(asset);
+            if (assetSave == null)
+                throw new BusinessException("Request Cannot be processed");
+            else
+                success = true;
+        }
+        return success;
+    }
+
+    public List<AssetData> getAllMovements(String serialNumber) throws BusinessException {
+        List<AssetData> assetRequests = assetRepository.findAllBySerialNumber(serialNumber);
+        if (assetRequests == null)
+            throw new BusinessException("No information available regarding the asset");
+        else
+            return assetRequests;
     }
 }
 
