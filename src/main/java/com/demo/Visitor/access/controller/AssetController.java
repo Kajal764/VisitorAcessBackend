@@ -105,7 +105,7 @@ public class AssetController {
 	        return responseEntity;
 	    }
 
-	  @GetMapping(value = "/pendingAssetRequestForMovement/{odcName}/{role}", produces = MediaType.APPLICATION_JSON_VALUE)
+	  @GetMapping(value = "/assetTraker/{serialNumber}", produces = MediaType.APPLICATION_JSON_VALUE)
 	  	public ResponseEntity<?> getAllMovements(@PathVariable String serialNumber){
 	        ResponseEntity<?> responseEntity = null;
 	        try {
