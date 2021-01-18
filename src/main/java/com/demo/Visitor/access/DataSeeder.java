@@ -25,7 +25,7 @@ public class DataSeeder {
         return args -> {
             if (userRepository.findByEmpId("Admin").isEmpty()) {
                 RegisterUserDto adminDTO = new RegisterUserDto("Admin", "", "admin@gmail.com", "Admin@123", "Admin", 9090909090L,
-                        Arrays.asList("Admin", "Manager", "Employee", "Odc-Manager"), "Admin", Arrays.asList());
+                        Arrays.asList("Admin", "Manager", "Employee", "Odc-Manager"), "Admin", Arrays.asList("Store"));
                 adminDTO.password = bcryptPasswordEncoder.encode(adminDTO.password);
                 UserInfo userInfo = new UserInfo(adminDTO);
                 userInfo.setFlag(true);

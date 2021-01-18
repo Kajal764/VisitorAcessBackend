@@ -20,7 +20,8 @@ public class AssetData {
     private String reason;
     private boolean isCurrentOdc;
     private String assetCondition;
-    private LocalDateTime dateOfApproval;
+    private LocalDateTime fromDate;
+    private LocalDateTime tillDate;
     private String status;
 
     public AssetData() {
@@ -106,12 +107,20 @@ public class AssetData {
         this.assetCondition = assetCondition;
     }
 
-    public LocalDateTime getDateOfApproval() {
-        return dateOfApproval;
+    public LocalDateTime getFromDate() {
+        return fromDate;
     }
 
-    public void setDateOfApproval(LocalDateTime dateOfApproval) {
-        this.dateOfApproval = dateOfApproval;
+    public void setFromDate(LocalDateTime fromDate) {
+        this.fromDate = fromDate;
+    }
+
+    public LocalDateTime getTillDate() {
+        return tillDate;
+    }
+
+    public void setTillDate(LocalDateTime tillDate) {
+        this.tillDate = tillDate;
     }
 
     public String getStatus() {
@@ -134,7 +143,8 @@ public class AssetData {
                 ", reason='" + reason + '\'' +
                 ", isCurrentOdc=" + isCurrentOdc +
                 ", assetCondition='" + assetCondition + '\'' +
-                ", dateOfApproval=" + dateOfApproval +
+                ", fromDate=" + fromDate +
+                ", tillDate=" + tillDate +
                 ", status='" + status + '\'' +
                 '}';
     }

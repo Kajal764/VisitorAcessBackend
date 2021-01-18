@@ -46,10 +46,12 @@ public class AssetService {
                 } else {
                     assetData.setAssetCondition(assetDto.reason);
                 }
-                Optional<AssetData> exist = assetRepository.findBySerialNumber(value.serialNumber);
+                \
+                Optional<AssetData> exist = assetRepository.findBySerialNumberAndIsCurrentOdc(value.serialNumber,true);
                 if (exist.isPresent()) {
                     assetRepository.deleteByRequestId(exist.get().getRequestId());
                     exist.get().setCurrentOdc(false);
+                    exist.get().setTillDate(LocalDateTime.now());
                     assetRepository.save(exist.get());
                 }
                 assetData.setCurrentOdc(true);
@@ -103,7 +105,8 @@ public class AssetService {
         boolean success = false;
         for (AssetData asset : assetList) {
             assetRepository.deleteByRequestId(asset.getRequestId());
-            asset.setDateOfApproval(LocalDateTime.now());
+            if (asset.getStatus().equals("Approved"))
+                asset.setFromDate(LocalDateTime.now());
             AssetData assetSave = assetRepository.save(asset);
             if (assetSave == null)
                 throw new BusinessException("Request Cannot be processed");
@@ -119,6 +122,13 @@ public class AssetService {
             throw new BusinessException("No information available regarding the asset");
         else
             return assetRequests;
+    }
+
+    public List<AssetData> getAssetListToView(String empId) throws BusinessException {
+        List<AssetData> assetDataList = assetRepository.findByEmpId(empId);
+        if (assetDataList.size() == 0)
+            throw new BusinessException("Request Not Raised For Assets !!!");
+        return assetDataList;
     }
 }
 

@@ -41,8 +41,10 @@ public class UserService {
         Optional<UserInfo> user = userRepository.findByEmpId(registerUserDto.empId);
         if (user.isPresent())
             return false;
-        if (userInfo.getRole().contains("Odc-Manager"))
+        if (userInfo.getRole().contains("Odc-Manager")) {
             userInfo.setManagerName("Admin ");
+            userInfo.getOdc().add("Store");
+        }
         userInfo.setAccountActive(false);
         userInfo.setFlag(true);
         userRepository.save(userInfo);
@@ -270,8 +272,8 @@ public class UserService {
         List<VisitorRequest> visitorRequestList = visitorRequestRepository.findByManagerEmpID(empId);
         if (user.isPresent()) {
             visitorRequestList.removeIf(value -> value.isOdcExist() == false);
-            visitorRequestList.removeIf(value->value.getStatus().equals("Approved"));
-            visitorRequestList.removeIf(value->value.getStatus().equals("Rejected"));
+            visitorRequestList.removeIf(value -> value.getStatus().equals("Approved"));
+            visitorRequestList.removeIf(value -> value.getStatus().equals("Rejected"));
             return visitorRequestList;
         }
         return null;

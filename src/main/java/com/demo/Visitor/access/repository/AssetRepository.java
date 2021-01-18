@@ -14,7 +14,7 @@ public interface AssetRepository extends MongoRepository<AssetData, String> {
 
     List<AssetData> findAllBySerialNumber(String name);
 
-    Optional<AssetData> findBySerialNumber(String no);
+    Optional<AssetData> findBySerialNumberAndIsCurrentOdc(String no,boolean data);
 
     Optional<AssetData> findBySerialNumberAndOdcName(String no, String odc);
 
@@ -25,6 +25,5 @@ public interface AssetRepository extends MongoRepository<AssetData, String> {
 
     List<AssetData> findAllByOdcName(String odcName);
 
-    List<AssetData> findAllByStatus(String status);
-
+    List<AssetData> findByEmpId(String empId);
 }

@@ -51,7 +51,7 @@ public class AssetController {
             List<AssetData> assetLists = assetService.getAssetRequests(empId);
             responseEntity = new ResponseEntity<>(assetLists, HttpStatus.ACCEPTED);
         } catch (BusinessException e) {
-            responseEntity = new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            responseEntity = new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
         return responseEntity;
     }
@@ -64,7 +64,7 @@ public class AssetController {
             if (success)
                 responseEntity = new ResponseEntity<>(success, HttpStatus.ACCEPTED);
         } catch (BusinessException e) {
-            responseEntity = new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+            responseEntity = new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
         }
         return responseEntity;
     }
@@ -78,6 +78,18 @@ public class AssetController {
                 responseEntity = new ResponseEntity<>(assetRequest, HttpStatus.ACCEPTED);
         } catch (BusinessException e) {
             responseEntity = new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+        }
+        return responseEntity;
+    }
+
+    @GetMapping(value = "/view-assetList/{empId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getAssetsRequestList(@PathVariable String empId) {
+        ResponseEntity<?> responseEntity = null;
+        try {
+            List<AssetData> assetListToView = assetService.getAssetListToView(empId);
+            responseEntity = new ResponseEntity<>(assetListToView, HttpStatus.OK);
+        } catch (BusinessException e) {
+            responseEntity = new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
         return responseEntity;
     }
