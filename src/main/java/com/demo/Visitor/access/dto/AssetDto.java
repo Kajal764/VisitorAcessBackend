@@ -5,8 +5,6 @@ import java.util.List;
 public class AssetDto {
 
     public List<AssetInfo> assetInfos;
-    //    public String serialNumber;
-//    public String name;
     public String type;
     public String empId;
     public String odcName;
@@ -14,6 +12,5 @@ public class AssetDto {
 
     public AssetDto() {
     }
-
 
 }

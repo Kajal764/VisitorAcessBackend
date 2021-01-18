@@ -46,8 +46,7 @@ public class AssetService {
                 } else {
                     assetData.setAssetCondition(assetDto.reason);
                 }
-                \
-                Optional<AssetData> exist = assetRepository.findBySerialNumberAndIsCurrentOdc(value.serialNumber,true);
+                Optional<AssetData> exist = assetRepository.findBySerialNumberAndIsCurrentOdc(value.serialNumber, true);
                 if (exist.isPresent()) {
                     assetRepository.deleteByRequestId(exist.get().getRequestId());
                     exist.get().setCurrentOdc(false);
@@ -72,18 +71,22 @@ public class AssetService {
     }
 
     public List<AssetData> getAssetList(String empId) throws BusinessException {
-        Optional<UserInfo> userInfo = userRepository.findByEmpId(empId);
         List<AssetData> assetDataList = new ArrayList<>();
-        if (userInfo.isPresent()) {
-            List<String> odc = userInfo.get().getOdc();
-            odc.forEach(odcName -> assetDataList.addAll(assetRepository.findAllByOdcName(odcName)));
-            assetDataList.removeIf(value -> value.isCurrentOdc() == false);
-            if (assetDataList.size() == 0) {
-                throw new BusinessException("Assets Not Added !!!");
+        if (empId.equals("Admin")) {
+            assetDataList.addAll(assetRepository.findAllByIsCurrentOdc(true));
+        } else {
+            Optional<UserInfo> userInfo = userRepository.findByEmpId(empId);
+            if (userInfo.isPresent()) {
+                List<String> odc = userInfo.get().getOdc();
+                odc.forEach(odcName -> assetDataList.addAll(assetRepository.findAllByOdcName(odcName)));
+                assetDataList.removeIf(value -> value.isCurrentOdc() == false);
             }
-            return assetDataList;
+            throw new BusinessException("User Not Present !!!");
         }
-        throw new BusinessException("User Not Present !!!");
+        if (assetDataList.size() == 0) {
+            throw new BusinessException("Assets Not Added !!!");
+        }
+        return assetDataList;
     }
 
     public List<AssetData> getAssetRequests(String empId) throws BusinessException {
