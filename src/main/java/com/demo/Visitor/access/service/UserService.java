@@ -5,7 +5,6 @@ import com.demo.Visitor.access.dto.RegistrationRequest;
 import com.demo.Visitor.access.dto.ResponseDto;
 import com.demo.Visitor.access.exception.BusinessException;
 import com.demo.Visitor.access.exception.LoginException;
-import com.demo.Visitor.access.model.Assets;
 import com.demo.Visitor.access.model.ODCList;
 import com.demo.Visitor.access.model.UserInfo;
 import com.demo.Visitor.access.model.VisitorRequest;
@@ -42,8 +41,10 @@ public class UserService {
         Optional<UserInfo> user = userRepository.findByEmpId(registerUserDto.empId);
         if (user.isPresent())
             return false;
-        if (userInfo.getRole().contains("Odc-Manager"))
+        if (userInfo.getRole().contains("Odc-Manager")) {
             userInfo.setManagerName("Admin ");
+            userInfo.getOdc().add("Store");
+        }
         userInfo.setAccountActive(false);
         userInfo.setFlag(true);
         userRepository.save(userInfo);
@@ -271,6 +272,8 @@ public class UserService {
         List<VisitorRequest> visitorRequestList = visitorRequestRepository.findByManagerEmpID(empId);
         if (user.isPresent()) {
             visitorRequestList.removeIf(value -> value.isOdcExist() == false);
+            visitorRequestList.removeIf(value -> value.getStatus().equals("Approved"));
+            visitorRequestList.removeIf(value -> value.getStatus().equals("Rejected"));
             return visitorRequestList;
         }
         return null;
@@ -282,13 +285,5 @@ public class UserService {
     }
 
 
-//    public List<UserInfo> getEmployeesList(String manager) {
-//        List<UserInfo> userInfoList = userRepository.findAllByManagerName(manager);
-//        return userInfoList;
-//    }
 
-    
-   
-    
-    
 }
