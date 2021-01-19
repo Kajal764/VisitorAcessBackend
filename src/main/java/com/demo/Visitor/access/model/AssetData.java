@@ -1,7 +1,6 @@
 package com.demo.Visitor.access.model;
 
 import com.demo.Visitor.access.dto.AssetDto;
-import com.demo.Visitor.access.dto.AssetInfo;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
