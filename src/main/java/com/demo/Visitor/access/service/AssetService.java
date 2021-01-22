@@ -80,8 +80,10 @@ public class AssetService {
                 List<String> odc = userInfo.get().getOdc();
                 odc.forEach(odcName -> assetDataList.addAll(assetRepository.findAllByOdcName(odcName)));
                 assetDataList.removeIf(value -> value.isCurrentOdc() == false);
+            } else {
+                throw new BusinessException("User Not Present !!!");
             }
-            throw new BusinessException("User Not Present !!!");
+
         }
         if (assetDataList.size() == 0) {
             throw new BusinessException("Assets Not Added !!!");
