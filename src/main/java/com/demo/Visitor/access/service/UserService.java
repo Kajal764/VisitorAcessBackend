@@ -147,8 +147,12 @@ public class UserService {
         Optional<ODCList> odcName = odcRepository.findByOdcName(odc.getOdcName());
         if (odcName.isPresent() && odcName.get().getFlag() == true)
             throw new LoginException("Odc Already Exist", 400);
-        if (odcName.get().getFlag() == false && odcName.isPresent()) {
-            odcRepository.deleteByOdcName(odcName.get().getOdcName());
+//        if (odcName.get().getFlag() == false && odcName.isPresent()) {
+//            odcRepository.deleteByOdcName(odcName.get().getOdcName());
+//        }
+        if (odcName.isPresent()  &&  odcName.get().getFlag() == false) {
+        	System.out.println("2nd ");
+          odcRepository.deleteByOdcName(odcName.get().getOdcName());
         }
         odc.setFlag(true);
         ODCList odcAdded = odcRepository.save(odc);
@@ -249,8 +253,9 @@ public class UserService {
 
     public boolean deleteOdc(String odcName) {
         Optional<ODCList> odc = odcRepository.findByOdcName(odcName);
-        odcRepository.deleteByOdcName(odcName);
+       // odcRepository.deleteByOdcName(odcName);
         odc.get().setFlag(false);
+//        odc.get().set_id(odc.get().get_id()
         odcRepository.save(odc.get());
         List<VisitorRequest> allByOdc = visitorRequestRepository.findAllByOdc(odcName);
         allByOdc.forEach(value -> {
