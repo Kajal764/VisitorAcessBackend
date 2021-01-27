@@ -27,5 +27,10 @@ public interface AssetRepository extends MongoRepository<AssetData, String> {
 
     List<AssetData> findByEmpId(String empId);
 
+    
+    Optional<AssetData> findBySerialNumber(String no);
+
+
     List<AssetData> findAllByIsCurrentOdc(boolean data);
+
 }

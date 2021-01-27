@@ -20,17 +20,31 @@ public class AssetController {
     @Autowired
     AssetService assetService;
 
+//    @PostMapping(value = "/addAsset")
+//    public ResponseEntity<?> addAsset(@RequestBody AssetDto assetDto) {
+//        ResponseEntity<?> responseEntity = null;
+//        try {
+//            List<String> success = assetService.addAsset(assetDto);
+//            responseEntity = new ResponseEntity<>(success, HttpStatus.CREATED);
+//        } catch (BusinessException e) {
+//            responseEntity = new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
+//        }
+//        return responseEntity;
+//    }
+    
     @PostMapping(value = "/addAsset")
-    public ResponseEntity<?> addAsset(@RequestBody AssetDto assetDto) {
+    public ResponseEntity<?> addAsset(@RequestBody AssetData assetData) {
         ResponseEntity<?> responseEntity = null;
         try {
-            List<String> success = assetService.addAsset(assetDto);
+            boolean success = assetService.addAssets(assetData);
             responseEntity = new ResponseEntity<>(success, HttpStatus.CREATED);
         } catch (BusinessException e) {
             responseEntity = new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
         }
         return responseEntity;
     }
+    
+    
 
     @GetMapping(value = "/assetList/{empId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getAssetList(@PathVariable String empId) {

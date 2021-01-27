@@ -1,6 +1,8 @@
 package com.demo.Visitor.access.model;
 
 import lombok.ToString;
+
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -8,7 +10,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @ToString
 public class ODCList {
 
-    private int odcId;
+	@Id
+	private String _id;
+  
+	private int odcId;
 
     @Indexed(unique = true)
     private String odcName;
@@ -24,6 +29,14 @@ public class ODCList {
         this.odcName = odcName;
         this.flag = flag;
     }
+    
+    public String get_id() {
+  		return _id;
+  	}
+
+  	public void set_id(String _id) {
+  		this._id = _id;
+  	}
 
     public boolean getFlag() {
         return flag;
