@@ -12,27 +12,25 @@ public class AssetData {
     @Indexed(unique = true)
     private int requestId;
     private String serialNumber;
-    private String name;
+    private String description;
     private String type;
     private String empId;
     private String odcName;
-    private String reason;
+    private String status;
     private boolean isCurrentOdc;
-    private String assetCondition;
+    public String movement;
     private LocalDateTime fromDate;
     private LocalDateTime tillDate;
-    private String status;
+    private String requestStatus;
 
     public AssetData() {
     }
 
     public AssetData(AssetDto assetDto) {
-        this.type = assetDto.type;
         this.empId = assetDto.empId;
         this.odcName = assetDto.odcName;
-        this.reason = assetDto.reason;
+        this.movement = assetDto.movement;
     }
-
 
     public int getRequestId() {
         return requestId;
@@ -48,14 +46,6 @@ public class AssetData {
 
     public void setSerialNumber(String serialNumber) {
         this.serialNumber = serialNumber;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getType() {
@@ -82,12 +72,12 @@ public class AssetData {
         this.odcName = odcName;
     }
 
-    public String getReason() {
-        return reason;
+    public String getStatus() {
+        return status;
     }
 
-    public void setReason(String reason) {
-        this.reason = reason;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public boolean isCurrentOdc() {
@@ -96,14 +86,6 @@ public class AssetData {
 
     public void setCurrentOdc(boolean currentOdc) {
         isCurrentOdc = currentOdc;
-    }
-
-    public String getAssetCondition() {
-        return assetCondition;
-    }
-
-    public void setAssetCondition(String assetCondition) {
-        this.assetCondition = assetCondition;
     }
 
     public LocalDateTime getFromDate() {
@@ -122,12 +104,28 @@ public class AssetData {
         this.tillDate = tillDate;
     }
 
-    public String getStatus() {
-        return status;
+    public String getRequestStatus() {
+        return requestStatus;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setRequestStatus(String requestStatus) {
+        this.requestStatus = requestStatus;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getMovement() {
+        return movement;
+    }
+
+    public void setMovement(String movement) {
+        this.movement = movement;
     }
 
     @Override
@@ -135,16 +133,16 @@ public class AssetData {
         return "AssetData{" +
                 "requestId=" + requestId +
                 ", serialNumber='" + serialNumber + '\'' +
-                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
                 ", type='" + type + '\'' +
                 ", empId='" + empId + '\'' +
                 ", odcName='" + odcName + '\'' +
-                ", reason='" + reason + '\'' +
+                ", status='" + status + '\'' +
                 ", isCurrentOdc=" + isCurrentOdc +
-                ", assetCondition='" + assetCondition + '\'' +
+                ", movement='" + movement + '\'' +
                 ", fromDate=" + fromDate +
                 ", tillDate=" + tillDate +
-                ", status='" + status + '\'' +
+                ", requestStatus='" + requestStatus + '\'' +
                 '}';
     }
 }

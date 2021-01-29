@@ -27,8 +27,7 @@ public class UserController {
 
     @Autowired
     UserService userService;
-    
-   
+
 
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     private ResponseDto register(@Valid @RequestBody RegisterUserDto registerUserDto) throws LoginException {

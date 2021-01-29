@@ -30,7 +30,6 @@ public interface AssetRepository extends MongoRepository<AssetData, String> {
     
     Optional<AssetData> findBySerialNumber(String no);
 
-
     List<AssetData> findAllByIsCurrentOdc(boolean data);
 
 }
