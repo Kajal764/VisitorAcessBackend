@@ -32,11 +32,11 @@ public class AssetController {
         return responseEntity;
     }
 
-    @GetMapping(value = "/assetList/{empId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getAssetList(@PathVariable String empId) {
+    @GetMapping(value = "/assetList/{empId}/{type}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getAssetList(@PathVariable String empId,@PathVariable String type) {
         ResponseEntity<?> responseEntity = null;
         try {
-            List<AssetData> assetLists = assetService.getAssetList(empId);
+            List<AssetData> assetLists = assetService.getAssetList(empId,type);
             responseEntity = new ResponseEntity<>(assetLists, HttpStatus.CREATED);
         } catch (BusinessException e) {
             responseEntity = new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -44,11 +44,11 @@ public class AssetController {
         return responseEntity;
     }
 
-    @GetMapping(value = "/pendingAssetRequest/{empId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getAssetRequest(@PathVariable String empId) {
+    @GetMapping(value = "/pendingAssetRequest/{empId}/{requestStatus}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getAssetRequest(@PathVariable String empId,@PathVariable String requestStatus) {
         ResponseEntity<?> responseEntity = null;
         try {
-            List<AssetData> assetLists = assetService.getAssetRequests(empId);
+            List<AssetData> assetLists = assetService.getAssetRequests(empId,requestStatus);
             responseEntity = new ResponseEntity<>(assetLists, HttpStatus.ACCEPTED);
         } catch (BusinessException e) {
             responseEntity = new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);

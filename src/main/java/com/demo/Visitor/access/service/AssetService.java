@@ -76,34 +76,36 @@ public class AssetService {
         return addedAssets;
     }
 
-    public List<AssetData> getAssetList(String empId) throws BusinessException {
+    public List<AssetData> getAssetList(String empId, String type) throws BusinessException {
         List<AssetData> assetDataList = new ArrayList<>();
         if (empId.equals("Admin")) {
-            assetDataList.addAll(assetRepository.findAllByIsCurrentOdc(true));
+            if (type.equals("All"))
+                assetDataList.addAll(assetRepository.findAllByIsCurrentOdc(true));
+            assetDataList.addAll(assetRepository.findAllByIsCurrentOdcAndType(true,type));
         } else {
             Optional<UserInfo> userInfo = userRepository.findByEmpId(empId);
             if (userInfo.isPresent()) {
                 List<String> odc = userInfo.get().getOdc();
-                odc.forEach(odcName -> assetDataList.addAll(assetRepository.findAllByOdcName(odcName)));
+                odc.forEach(odcName -> assetDataList.addAll(assetRepository.findAllByOdcNameAndType(odcName, type)));
                 assetDataList.removeIf(value -> value.isCurrentOdc() == false);
             } else {
                 throw new BusinessException("User Not Present !!!");
             }
         }
         if (assetDataList.size() == 0) {
-            throw new BusinessException("Assets Not Added !!!");
+            throw new BusinessException("Assets Not Added in odc !!!");
         }
         return assetDataList;
     }
 
-    public List<AssetData> getAssetRequests(String empId) throws BusinessException {
+    public List<AssetData> getAssetRequests(String empId, String requestStatus) throws BusinessException {
         Optional<UserInfo> userInfo = userRepository.findByEmpId(empId);
         List<AssetData> assetDataList = new ArrayList<>();
         if (userInfo.isPresent()) {
             List<String> odc = userInfo.get().getOdc();
             odc.forEach(odcName -> assetDataList.addAll(assetRepository.findAllByOdcName(odcName)));
             assetDataList.removeIf(data -> data.isCurrentOdc() == false);
-            assetDataList.removeIf(data -> !data.getStatus().equals("Pending Approval"));
+            assetDataList.removeIf(data -> !data.getRequestStatus().equals(requestStatus));
             if (assetDataList.size() == 0)
                 throw new BusinessException("No Pending Request !!!");
             return assetDataList;
@@ -115,7 +117,7 @@ public class AssetService {
         boolean success = false;
         for (AssetData asset : assetList) {
             assetRepository.deleteByRequestId(asset.getRequestId());
-            if (asset.getStatus().equals("Approved"))
+            if (asset.getRequestStatus().equals("Approved"))
                 asset.setFromDate(LocalDateTime.now());
             AssetData assetSave = assetRepository.save(asset);
             if (assetSave == null)
