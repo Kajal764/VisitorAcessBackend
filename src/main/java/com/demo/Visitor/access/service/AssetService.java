@@ -8,6 +8,7 @@ import com.demo.Visitor.access.repository.AssetRepository;
 import com.demo.Visitor.access.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,21 @@ public class AssetService {
     UserRepository userRepository;
 
     public List<String> addAsset(AssetDto assetDto) throws BusinessException {
+
+        int requestId = 256000;
+
+        int size = assetDto.assetInfos.size();
+        if (assetDto.movement.equals("outward") || assetDto.movement.equals("transfer")) {
+            do {
+                List<AssetData> list = assetRepository.findAllBySerialNumber(assetDto.assetInfos.get(size - 1).serialNumber);
+                if (list.isEmpty())
+                    assetDto.assetInfos.remove(size - 1);
+                size--;
+            } while (size != 0);
+        }
+        if (assetDto.assetInfos.size() == 0) {
+            throw new BusinessException("Asset not present in odc !!!");
+        }
         List<String> addedAssets = new ArrayList<>();
         assetDto.assetInfos.forEach(value -> {
             Optional<AssetData> asset = assetRepository.findBySerialNumberAndOdcName(value.serialNumber, assetDto.odcName);
@@ -33,16 +49,9 @@ public class AssetService {
                 assetData.setDescription(value.description);
                 assetData.setType(value.type);
                 assetData.setStatus(value.status);
-                Random random = new Random();
-                int random_id;
-                Optional<AssetData> requests;
-                do {
-                    random_id = random.nextInt();
-                    requests = assetRepository.findByRequestId(random_id);
-                } while (requests.isPresent());
-                assetData.setRequestId(random_id);
+                List<AssetData> allAssets = assetRepository.findAll();
+                assetData.setRequestId(requestId + allAssets.size() + 1);
                 assetData.setRequestStatus("Pending Approval");
-
                 Optional<AssetData> exist = assetRepository.findBySerialNumberAndIsCurrentOdc(value.serialNumber, true);
                 if (exist.isPresent()) {
                     assetRepository.deleteByRequestId(exist.get().getRequestId());
@@ -62,7 +71,6 @@ public class AssetService {
                 }
             }
         });
-
         if (addedAssets.size() == 0)
             throw new BusinessException("Asset not added!!!Please try again");
         return addedAssets;

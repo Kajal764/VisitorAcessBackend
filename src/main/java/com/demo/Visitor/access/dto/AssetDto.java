@@ -12,4 +12,19 @@ public class AssetDto {
     public AssetDto() {
     }
 
+    public AssetDto(String empId, String odcName, String movement) {
+        this.empId = empId;
+        this.odcName = odcName;
+        this.movement = movement;
+    }
+
+    @Override
+    public String toString() {
+        return "AssetDto{" +
+                "assetInfos=" + assetInfos +
+                ", empId='" + empId + '\'' +
+                ", odcName='" + odcName + '\'' +
+                ", movement='" + movement + '\'' +
+                '}';
+    }
 }

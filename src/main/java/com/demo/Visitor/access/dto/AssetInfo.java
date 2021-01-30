@@ -16,4 +16,14 @@ public class AssetInfo {
         this.type = type;
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "AssetInfo{" +
+                "serialNumber='" + serialNumber + '\'' +
+                ", description='" + description + '\'' +
+                ", type='" + type + '\'' +
+                ", status='" + status + '\'' +
+                '}';
+    }
 }
