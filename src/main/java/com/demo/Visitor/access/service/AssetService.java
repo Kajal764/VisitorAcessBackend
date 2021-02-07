@@ -29,7 +29,7 @@ public class AssetService {
         int requestId = 256000;
 
         int size = assetDto.assetInfos.size();
-        if (assetDto.movement.equals("outward") || assetDto.movement.equals("transfer")) {
+        if (assetDto.movement.equals("Outward") || assetDto.movement.equals("Transferred")) {
             do {
                 List<AssetData> list = assetRepository.findAllBySerialNumber(assetDto.assetInfos.get(size - 1).serialNumber);
                 if (list.isEmpty())
@@ -56,7 +56,9 @@ public class AssetService {
                 if (exist.isPresent()) {
                     assetRepository.deleteByRequestId(exist.get().getRequestId());
                     exist.get().setCurrentOdc(false);
+                    if(exist.get().getRequestStatus().equals("Approved"))
                     exist.get().setTillDate(LocalDateTime.now());
+                    
                     assetRepository.save(exist.get());
                 }
                 assetData.setCurrentOdc(true);

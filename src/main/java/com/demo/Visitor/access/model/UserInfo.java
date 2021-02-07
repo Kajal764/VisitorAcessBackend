@@ -19,7 +19,7 @@ public class UserInfo {
     @Indexed(unique = true)
     private String empId;
 
-    private long mobileNo;
+    private String mobileNo;
 
     private List<String> role;
 
@@ -86,11 +86,11 @@ public class UserInfo {
         this.empId = empId;
     }
 
-    public long getMobileNo() {
+    public String getMobileNo() {
         return mobileNo;
     }
 
-    public void setMobileNo(long mobileNo) {
+    public void setMobileNo(String mobileNo) {
         this.mobileNo = mobileNo;
     }
 
