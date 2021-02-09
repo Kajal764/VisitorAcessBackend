@@ -15,9 +15,11 @@ public interface ODCRepository extends MongoRepository<ODCList, String> {
 
     Optional<ODCList> findByOdcName(String name);
 
+    Optional<ODCList> findByOdcId(int odcId);
+
     @DeleteQuery
     void deleteByOdcName(String name);
 
-	void insert(Optional<ODCList> odc);
+    void insert(Optional<ODCList> odc);
 
 }
