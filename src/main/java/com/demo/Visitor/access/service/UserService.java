@@ -123,6 +123,7 @@ public class UserService {
     public List<ODCList> findAllODC() throws BusinessException {
         List<ODCList> odcLists = odcRepository.findAll();
         odcLists.removeIf(odc -> odc.getFlag() == false);
+        odcLists.sort((ODCList s1, ODCList s2) -> s1.getOdcId() - s2.getOdcId());
         if (odcLists == null)
             throw new BusinessException("No ODC is present");
         else
@@ -143,19 +144,19 @@ public class UserService {
         return null;
     }
 
-    public boolean addOdc(ODCList odc) throws BusinessException {
+    public ResponseDto addOdc(ODCList odc) throws BusinessException {
         Optional<ODCList> odcName = odcRepository.findByOdcName(odc.getOdcName());
         if (odcName.isPresent() && odcName.get().getFlag() == true)
             throw new LoginException("Odc Already Exist", 400);
-//        if (odcName.get().getFlag() == false && odcName.isPresent()) {
-//            odcRepository.deleteByOdcName(odcName.get().getOdcName());
-//        }
-        if (odcName.isPresent()  &&  odcName.get().getFlag() == false) {
-        	System.out.println("2nd ");
-          odcRepository.deleteByOdcName(odcName.get().getOdcName());
+        List<ODCList> all = odcRepository.findAll();
+        odc.setOdcId(all.size() + 1);
+        if (odcName.isPresent() && odcName.get().getFlag() == false) {
+            odcRepository.deleteByOdcName(odcName.get().getOdcName());
+            odc.setOdcId(odcName.get().getOdcId());
         }
         odc.setFlag(true);
         ODCList odcAdded = odcRepository.save(odc);
+
         List<VisitorRequest> allByOdc = visitorRequestRepository.findAllByOdc(odc.getOdcName());
         allByOdc.forEach(req -> {
             req.setOdcExist(true);
@@ -165,25 +166,8 @@ public class UserService {
         if (odcAdded == null)
             throw new BusinessException("Something went wrong!!!Please try again");
         else
-            return true;
+            return new ResponseDto("ODC Added Successfully !!!", 200);
     }
-
-//    public boolean approveOrRejectOdcRequest(VisitorRequest visitorRequest) throws BusinessException {
-//        visitorRequestRepository.deleteByVisitorRequestId(visitorRequest.getVisitorRequestId());
-//        if (visitorRequest.getStatus().equals("Accepted By Manager"))
-//            visitorRequest.setStatus("Accepted By Manager");
-//        else if (visitorRequest.getStatus().equals("Approved"))
-//            visitorRequest.setStatus("Approved");
-//        else if (visitorRequest.getStatus().equals("Rejected By Manager"))
-//            visitorRequest.setStatus("Rejected By Manager");
-//        else if (visitorRequest.getStatus().equals("Rejected"))
-//            visitorRequest.setStatus("Rejected");
-//        VisitorRequest success = visitorRequestRepository.save(visitorRequest);
-//        if (success == null)
-//            throw new BusinessException("Request Cannot be Approved");
-//        else
-//            return true;
-//    }
 
     public boolean approveOrRejectOdcRequest(List<VisitorRequest> visitorRequests) throws BusinessException {
         boolean success = false;
@@ -253,7 +237,6 @@ public class UserService {
 
     public boolean deleteOdc(String odcName) {
         Optional<ODCList> odc = odcRepository.findByOdcName(odcName);
-       // odcRepository.deleteByOdcName(odcName);
         odc.get().setFlag(false);
 //        odc.get().set_id(odc.get().get_id()
         odcRepository.save(odc.get());
@@ -284,11 +267,15 @@ public class UserService {
         return null;
     }
 
-    public List<UserInfo> getEmployeesList(String manager) {
-        List<UserInfo> userInfoList = userRepository.findAllByManagerName(manager);
-        return userInfoList;
+    public ResponseDto editOdc(ODCList odc) throws BusinessException {
+
+        Optional<ODCList> odcData = odcRepository.findByOdcId(odc.getOdcId());
+        if (odcData.isPresent()) {
+            odcRepository.deleteByOdcName(odcData.get().getOdcName());
+            odc.setFlag(true);
+            odcRepository.save(odc);
+            return new ResponseDto("ODC Name Update Successfully  !!!", 200);
+        }
+        throw new BusinessException("ODC not present");
     }
-
-
-
 }

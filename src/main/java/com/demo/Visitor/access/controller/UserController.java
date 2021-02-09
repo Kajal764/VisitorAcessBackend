@@ -68,7 +68,7 @@ public class UserController {
             boolean success = userService.insertIntoVisitorRequest(visitorRequest);
             responseEntity = new ResponseEntity<>(success, HttpStatus.CREATED);
         } catch (BusinessException e) {
-            responseEntity = new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+            responseEntity = new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
         }
         return responseEntity;
     }
@@ -80,7 +80,7 @@ public class UserController {
             List<VisitorRequest> visitorRequests = userService.viewOdcRequest(empId);
             responseEntity = new ResponseEntity<>(visitorRequests, HttpStatus.ACCEPTED);
         } catch (BusinessException e) {
-            responseEntity = new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+            responseEntity = new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
         }
         return responseEntity;
     }
@@ -92,7 +92,7 @@ public class UserController {
             List<UserInfo> odcManagers = userService.findAllODCManagerByOdcName(odcName);
             responseEntity = new ResponseEntity<>(odcManagers, HttpStatus.ACCEPTED);
         } catch (BusinessException e) {
-            responseEntity = new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+            responseEntity = new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
         }
         return responseEntity;
     }
@@ -105,7 +105,7 @@ public class UserController {
             if (odcLists != null)
                 responseEntity = new ResponseEntity<>(odcLists, HttpStatus.ACCEPTED);
         } catch (BusinessException e) {
-            responseEntity = new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+            responseEntity = new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
         }
         return responseEntity;
     }
@@ -136,7 +136,7 @@ public class UserController {
             if (success)
                 responseEntity = new ResponseEntity<>(success, HttpStatus.ACCEPTED);
         } catch (BusinessException e) {
-            responseEntity = new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+            responseEntity = new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
         }
         return responseEntity;
     }
@@ -165,10 +165,10 @@ public class UserController {
     public ResponseEntity<?> addODC(@RequestBody ODCList odc) throws BusinessException {
         ResponseEntity<?> responseEntity = null;
         try {
-            boolean success = userService.addOdc(odc);
+            ResponseDto success = userService.addOdc(odc);
             responseEntity = new ResponseEntity<>(success, HttpStatus.CREATED);
         } catch (BusinessException e) {
-            responseEntity = new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+            responseEntity = new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
         }
         return responseEntity;
     }
@@ -178,6 +178,18 @@ public class UserController {
         userService.deleteOdc(odcName);
         return new ResponseDto("ODC deleted from the list", 200);
     }
-    
+
+    @PostMapping(value = "/editOdc", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> editOdc(@RequestBody ODCList odc) {
+        ResponseEntity<?> responseEntity = null;
+        try {
+            ResponseDto success = userService.editOdc(odc);
+            responseEntity = new ResponseEntity<>(success, HttpStatus.CREATED);
+        } catch (BusinessException e) {
+            responseEntity = new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
+        }
+        return responseEntity;
+    }
+
 
 }
