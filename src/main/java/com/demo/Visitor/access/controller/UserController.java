@@ -8,6 +8,7 @@ import com.demo.Visitor.access.exception.LoginException;
 import com.demo.Visitor.access.model.ODCList;
 import com.demo.Visitor.access.model.UserInfo;
 import com.demo.Visitor.access.model.VisitorRequest;
+import com.demo.Visitor.access.model.WeeklyReport;
 import com.demo.Visitor.access.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -191,5 +192,28 @@ public class UserController {
         return responseEntity;
     }
 
+    @PostMapping(value = "/saveReport")
+    public ResponseEntity<?> saveReport(@RequestBody WeeklyReport weeklyReport) {
+        ResponseEntity<?> responseEntity = null;
+        try {
+            boolean success = userService.insertIntoWeeklyReport(weeklyReport);
+            responseEntity = new ResponseEntity<>(success, HttpStatus.CREATED);
+        } catch (BusinessException e) {
+            responseEntity = new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
+        }
+        return responseEntity;
+    }
+    
+    @GetMapping(value = "/getReports/{empId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getreport(@PathVariable String empId) {
+        ResponseEntity<?> responseEntity = null;
+        try {
+            List<WeeklyReport> weeklyReport = userService.getReports(empId);
+            responseEntity = new ResponseEntity<>(weeklyReport, HttpStatus.ACCEPTED);
+        } catch (BusinessException e) {
+            responseEntity = new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
+        }
+        return responseEntity;
+    }
 
 }
