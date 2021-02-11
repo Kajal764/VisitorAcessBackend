@@ -279,6 +279,13 @@ public class UserService {
             odcRepository.deleteByOdcName(odcData.get().getOdcName());
             odc.setFlag(true);
             odcRepository.save(odc);
+            List<UserInfo> userInfos = userRepository.findAllByOdc(odcData.get().getOdcName());
+            userInfos.forEach(userInfo -> {
+                userRepository.deleteByEmpId(userInfo.getEmpId());
+                userInfo.getOdc().remove(odcData.get().getOdcName());
+                userInfo.getOdc().add(odc.getOdcName());
+                userRepository.save(userInfo);
+            });
             return new ResponseDto("ODC Name Update Successfully  !!!", 200);
         }
         throw new BusinessException("ODC not present");
