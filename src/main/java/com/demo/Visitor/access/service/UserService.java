@@ -8,7 +8,9 @@ import com.demo.Visitor.access.exception.LoginException;
 import com.demo.Visitor.access.model.ODCList;
 import com.demo.Visitor.access.model.UserInfo;
 import com.demo.Visitor.access.model.VisitorRequest;
+import com.demo.Visitor.access.model.WeeklyReport;
 import com.demo.Visitor.access.repository.ODCRepository;
+import com.demo.Visitor.access.repository.ReportRepository;
 import com.demo.Visitor.access.repository.UserRepository;
 import com.demo.Visitor.access.repository.VisitorRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,9 @@ public class UserService {
 
     @Autowired
     VisitorRequestRepository visitorRequestRepository;
+    
+    @Autowired
+    ReportRepository reportRepository;
 
     @Autowired
     BCryptPasswordEncoder bcryptPasswordEncoder;
@@ -277,5 +282,31 @@ public class UserService {
             return new ResponseDto("ODC Name Update Successfully  !!!", 200);
         }
         throw new BusinessException("ODC not present");
+    }
+    
+    public boolean insertIntoWeeklyReport(WeeklyReport weeklyReport) throws BusinessException {
+        Optional<UserInfo> user = userRepository.findByEmpId(weeklyReport.getEmpId());
+        int random_id;
+        String[] name = user.get().getManagerName().split(" ");
+        Optional<UserInfo> manager = userRepository.findByFirstName(name[0]);
+        weeklyReport.setManagerEmpId(manager.get().getEmpId());
+        Random random = new Random();
+        random_id = random.nextInt();
+        Optional<WeeklyReport> byreports = reportRepository.findByReportId(random_id);
+        if (byreports.isPresent()) {
+            random_id = random.nextInt();
+        }
+        weeklyReport.setReportId(random_id);
+        WeeklyReport weeklyReportAdded = reportRepository.insert(weeklyReport);
+        if (weeklyReportAdded == null)
+            throw new BusinessException("Something went wrong!!!Please try again");
+        else
+            return true;
+    }
+    
+    public List<WeeklyReport> getReports(String empId) throws BusinessException {
+        List<WeeklyReport> weeklyReport = reportRepository.findByManagerEmpId(empId);
+        
+        return weeklyReport;
     }
 }
