@@ -5,14 +5,8 @@ import com.demo.Visitor.access.dto.RegistrationRequest;
 import com.demo.Visitor.access.dto.ResponseDto;
 import com.demo.Visitor.access.exception.BusinessException;
 import com.demo.Visitor.access.exception.LoginException;
-import com.demo.Visitor.access.model.ODCList;
-import com.demo.Visitor.access.model.UserInfo;
-import com.demo.Visitor.access.model.VisitorRequest;
-import com.demo.Visitor.access.model.WeeklyReport;
-import com.demo.Visitor.access.repository.ODCRepository;
-import com.demo.Visitor.access.repository.ReportRepository;
-import com.demo.Visitor.access.repository.UserRepository;
-import com.demo.Visitor.access.repository.VisitorRequestRepository;
+import com.demo.Visitor.access.model.*;
+import com.demo.Visitor.access.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,12 +27,15 @@ public class UserService {
 
     @Autowired
     VisitorRequestRepository visitorRequestRepository;
-    
+
     @Autowired
     ReportRepository reportRepository;
 
     @Autowired
     BCryptPasswordEncoder bcryptPasswordEncoder;
+
+    @Autowired
+    AssetRepository assetRepository;
 
     public boolean register(RegisterUserDto registerUserDto) {
         registerUserDto.password = bcryptPasswordEncoder.encode(registerUserDto.password);
@@ -286,11 +283,19 @@ public class UserService {
                 userInfo.getOdc().add(odc.getOdcName());
                 userRepository.save(userInfo);
             });
+            List<AssetData> allByOdcName = assetRepository.findAllByOdcName(odcData.get().getOdcName());
+            if (!allByOdcName.isEmpty()) {
+                allByOdcName.forEach(assetData -> {
+                    assetRepository.deleteByRequestId(assetData.getRequestId());
+                    assetData.setOdcName(odc.getOdcName());
+                    assetRepository.save(assetData);
+                });
+            }
             return new ResponseDto("ODC Name Update Successfully  !!!", 200);
         }
         throw new BusinessException("ODC not present");
     }
-    
+
     public boolean insertIntoWeeklyReport(WeeklyReport weeklyReport) throws BusinessException {
         Optional<UserInfo> user = userRepository.findByEmpId(weeklyReport.getEmpId());
         int random_id;
@@ -310,10 +315,9 @@ public class UserService {
         else
             return true;
     }
-    
+
     public List<WeeklyReport> getReports(String empId) throws BusinessException {
         List<WeeklyReport> weeklyReport = reportRepository.findByManagerEmpId(empId);
-        
         return weeklyReport;
     }
 }

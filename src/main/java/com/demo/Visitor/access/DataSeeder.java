@@ -1,6 +1,5 @@
 package com.demo.Visitor.access;
 
-
 import com.demo.Visitor.access.dto.RegisterUserDto;
 import com.demo.Visitor.access.model.ODCList;
 import com.demo.Visitor.access.model.UserInfo;
@@ -40,7 +39,7 @@ public class DataSeeder {
                 userInfo.setAccountActive(true);
                 userRepository.save(userInfo);
             }
-            if (odcRepository.findByOdcName("Store").isEmpty()) {
+            if (odcRepository.findByOdcId(1).isEmpty()) {
                 ODCList odcData = new ODCList(1, "Store", true);
                 odcRepository.save(odcData);
             }

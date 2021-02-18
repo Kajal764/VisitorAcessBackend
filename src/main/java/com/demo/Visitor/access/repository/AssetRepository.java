@@ -18,22 +18,15 @@ public interface AssetRepository extends MongoRepository<AssetData, String> {
 
     Optional<AssetData> findBySerialNumberAndOdcName(String no, String odc);
 
-    Optional<AssetData> findByRequestId(int id);
-
     @DeleteQuery
     void deleteByRequestId(int requestId);
-
-    List<AssetData> findAllByOdcNameAndType(String odcName,String type);
 
     List<AssetData> findAllByOdcName(String odcName);
 
     List<AssetData> findByEmpId(String empId);
 
 
-    Optional<AssetData> findBySerialNumber(String no);
-
     List<AssetData> findAllByIsCurrentOdc(boolean data);
 
-    List<AssetData> findAllByIsCurrentOdcAndType(boolean data,String type);
 
 }
